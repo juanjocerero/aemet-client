@@ -4,9 +4,6 @@ import { logger } from '../utils/consoleLogger.js';
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// --- Ruta: services/aemetApi.js ---
-// REEMPLAZA TODA LA FUNCIÓN obtenerDatosParaRango CON ESTA NUEVA VERSIÓN
-
 export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId) {
   const apiKey = process.env.AEMET_API_KEY;
   // LA URL AHORA SE CONSTRUYE DESDE LA CONFIGURACIÓN
