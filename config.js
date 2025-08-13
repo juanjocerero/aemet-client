@@ -1,4 +1,10 @@
 // config.js
+
+// Objeto para ajustes dinámicos del script.
+export const SCRIPT_SETTINGS = {
+  VERBOSE_MODE: false, // Por defecto, el modo verbose está desactivado.
+};
+
 export const API_CONFIG = {
   RETRY_DELAY_MS: 5000,
   MAX_RETRY_SECONDS: 90,

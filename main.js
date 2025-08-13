@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { format } from 'date-fns';
-import { API_CONFIG } from './config.js';
+import { API_CONFIG, SCRIPT_SETTINGS } from './config.js';
 import { generarRangosDePeticion, formatDisplayDateRange } from './utils/dateUtils.js';
 import { normalizarDatos, deduplicarPorFecha } from './utils/dataProcessor.js';
 import { analizarDatosMensuales, analizarDatosAnuales } from './utils/dataAnalyzer.js';
@@ -16,9 +16,9 @@ import { logger } from './utils/consoleLogger.js';
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 export async function procesarEstacion(estacionId, apiKey, fechaInicio, fechaFin) {
-  logger.info(`\n${logger.magentaBold('========================================')}`);
+  logger.info(`\n${logger.magentaBold('================================================')}`);
   logger.info(`  🚀 Iniciando proceso para la estación: ${estacionId} 🚀`);
-  logger.info(`${logger.magentaBold('========================================')}`);
+  logger.info(`${logger.magentaBold('=================================================')}`);
   
   const rangos = generarRangosDePeticion(fechaInicio, fechaFin);
   let todosLosDatos = [];
@@ -43,7 +43,15 @@ export async function procesarEstacion(estacionId, apiKey, fechaInicio, fechaFin
       }
     } catch (error) {
       logger.error(`   ❌ ERROR: No se pudieron obtener los datos.`);
-      errores.push({ estacionId, rango: formatDisplayDateRange(rango.start, rango.end), error: error.message });
+
+      // Muestra el error completo si está en modo verbose.
+      if (SCRIPT_SETTINGS.VERBOSE_MODE) {
+        console.error('Detalles del error:', error);
+      }
+      // Almacenamos el mensaje de error simple o el objeto completo para el resumen final
+      const errorToStore = SCRIPT_SETTINGS.VERBOSE_MODE ? error : { message: error.message };
+
+      errores.push({ estacionId, rango: formatDisplayDateRange(rango.start, rango.end), error: errorToStore });
     }
     
     if (i < rangos.length - 1) await sleep(API_CONFIG.REQUEST_INTERVAL_MS);
@@ -68,7 +76,7 @@ export async function procesarEstacion(estacionId, apiKey, fechaInicio, fechaFin
     logger.info(`\nLos resultados se guardarán en la carpeta: ${logger.highlight(nombreDirectorio)}`);
     
     // 3. Guardar CSV diario dentro de la nueva carpeta.
-    const nombreFicheroDiario = path.join(nombreDirectorio, `${estacionId}_${fInicioFmt}_${fFinFmt}.csv`);
+    const nombreFicheroDiario = path.join(nombreDirectorio, `diarios_${estacionId}_${fInicioFmt}_${fFinFmt}.csv`);
     await guardarDatosDiariosEnCSV(datosFinales, nombreFicheroDiario);
     
     // 4. Realizar y guardar análisis mensual.

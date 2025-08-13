@@ -1,10 +1,38 @@
 // index.js
 import readline from 'readline';
+import { parseArgs } from 'util';
+import { SCRIPT_SETTINGS } from './config.js';
 import { parse, isValid } from 'date-fns';
 import { logger } from './utils/consoleLogger.js';
 import { procesarEstacion } from './main.js';
 
+/**
+ * ¡Parsea los argumentos de la línea de comandos para configurar el script.
+ */
+function setupFromCLIArgs() {
+  const options = {
+    verbose: {
+      type: 'boolean',
+      short: 'v',
+    },
+  };
+
+  try {
+    const { values } = parseArgs({ options });
+    if (values.verbose) {
+      SCRIPT_SETTINGS.VERBOSE_MODE = true;
+      logger.warn('Modo Verbose activado. Se mostrarán los errores completos.');
+    }
+  } catch (error) {
+    logger.error(`Error al parsear los argumentos: ${error.message}`);
+    process.exit(1);
+  }
+}
+
 async function iniciarProcesoInteractivo() {
+  // Se ejecuta justo al inicio.
+  setupFromCLIArgs();
+  
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   const ask = (query) => new Promise(resolve => rl.question(query, resolve));
 

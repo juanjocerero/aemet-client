@@ -1,5 +1,5 @@
 // services/aemetApi.js
-import { API_CONFIG } from '../config.js';
+import { API_CONFIG, SCRIPT_SETTINGS } from '../config.js';
 import { logger } from '../utils/consoleLogger.js';
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -36,6 +36,9 @@ export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId
 
     } catch (error) {
       logger.warn(`   -> Error: ${error.message}. Reintentando...`);
+      if (SCRIPT_SETTINGS.VERBOSE_MODE) {
+        console.error(error);
+      }
       await sleep(API_CONFIG.RETRY_DELAY_MS);
     }
   }

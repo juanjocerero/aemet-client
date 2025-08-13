@@ -1,5 +1,6 @@
 // utils/dataProcessor.js
 import { parse } from 'date-fns';
+import { logger } from './consoleLogger.js';
 
 const toTitleCase = (texto) => {
   if (!texto) return '';

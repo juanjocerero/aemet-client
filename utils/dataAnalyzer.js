@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { groupBy, map, meanBy, maxBy, minBy } from 'lodash-es';
+import { groupBy, map, meanBy, maxBy, minBy, sortBy } from 'lodash-es';
 
 /**
 * Redondea un número a un máximo de dos decimales.
@@ -45,7 +45,6 @@ function _analizarDatosAgrupados(dailyData, groupByFn) {
     
     const maxTmed = getMax('tmed');
     const maxTmax = getMax('tmax');
-    // ... (El resto de esta lógica es idéntica a la versión anterior)
     const maxTmin = getMax('tmin');
     const maxPrec = getMax('prec');
     const maxRacha = getMax('racha');
@@ -54,13 +53,11 @@ function _analizarDatosAgrupados(dailyData, groupByFn) {
     const minTmed = getMin('tmed');
     const minTmax = getMin('tmax');
     const minTmin = getMin('tmin');
-    const minVelmedia = getMin('velmedia');
     
     return {
       fecha: groupKey,
       avg_tmed: round(meanBy(groupData, 'tmed')),
       avg_tmax: round(meanBy(groupData, 'tmax')),
-      // ... (El resto de los campos son idénticos)
       avg_tmin: round(meanBy(groupData, 'tmin')),
       avg_prec: round(meanBy(groupData, 'prec')),
       avg_velmedia: round(meanBy(groupData, 'velmedia')),
@@ -82,8 +79,6 @@ function _analizarDatosAgrupados(dailyData, groupByFn) {
       d_min_tmax: minTmax.date,
       min_tmin: minTmin.value,
       d_min_tmin: minTmin.date,
-      min_velmedia: minVelmedia.value,
-      d_min_velmedia: minVelmedia.date,
     };
   });
   
