@@ -32,7 +32,7 @@ function setupFromCLIArgs() {
 async function iniciarProcesoInteractivo() {
   // Se ejecuta justo al inicio.
   setupFromCLIArgs();
-  
+
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   const ask = (query) => new Promise(resolve => rl.question(query, resolve));
 
@@ -43,7 +43,7 @@ async function iniciarProcesoInteractivo() {
     const apiKey = await ask(`${queryColor('🔑 Introduce tu API Key de AEMET: ')}`);
     if (!apiKey) throw new Error('La API Key es obligatoria.');
 
-    const estacionesInput = await ask(`${queryColor('📡 Introduce ID(s) de estación (ej: 5530E,9434) [5530E]: ')}`);
+    const estacionesInput = await ask(`${queryColor('📡 Introduce ID(s) de estación (ej: 5530E,9434X) [5530E]: ')}`);
     const estaciones = (estacionesInput || '5530E').split(',').map(s => s.trim());
 
     const fechaInicioInput = await ask(`${queryColor('🗓️  Fecha de inicio (DD/MM/YYYY) [01/01/1972]: ')}`);

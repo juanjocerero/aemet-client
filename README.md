@@ -73,7 +73,7 @@ El script te guiará con una serie de preguntas interactivas:
 1.  **Introduce tu API Key de AEMET**: Pega la clave que obtuviste de AEMET.
 2.  **Introduce ID(s) de estación**:
     -   Para una sola estación, escribe su ID (ej: `5530E`).
-    -   Para varias, sepáralas por comas (ej: `5530E,9434,3195`).
+    -   Para varias, sepáralas por comas (ej: `5530E,9434X,3195H`).
     -   Puedes presionar Enter para usar el valor por defecto (`5530E`).
 3.  **Introduce la fecha de inicio (DD/MM/YYYY)**: Escribe la fecha de inicio o presiona Enter para usar `01/01/1972`.
 4.  **Introduce la fecha de fin (DD/MM/YYYY)**: Escribe la fecha de fin o presiona Enter para usar la fecha actual.
