@@ -20,27 +20,43 @@ export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId
         continue;
       }
       if (!resInicial.ok) {
-        throw new Error(`Error en petición inicial: ${resInicial.statusText}`);
+        // Lanza un error para ser capturado por el catch de este bloque try
+        throw new Error(`Error en petición inicial: ${resInicial.status} ${resInicial.statusText}`);
       }
       
       const resUrlDatos = await resInicial.json();
       if (resUrlDatos.estado !== 200) {
-        throw new Error(`API AEMET: ${resUrlDatos.descripcion}`);
+        // Lanza un error para ser capturado por el catch de este bloque try
+        throw new Error(`Error en la respuesta de AEMET: ${resUrlDatos.descripcion}`);
       }
       
       const resDatosFinales = await fetch(resUrlDatos.datos);
       if (!resDatosFinales.ok) {
-        throw new Error(`Error al obtener datos finales: ${resDatosFinales.statusText}`);
+        // Lanza un error para ser capturado por el catch de este bloque try
+        throw new Error(`Error al obtener datos finales: ${resDatosFinales.status} ${resDatosFinales.statusText}`);
       }
+      // Si todo ha ido bien, retorna los datos y sale de la función
       return await resDatosFinales.json();
       
     } catch (error) {
-      // Simplemente lanzamos el error para que main.js lo capture y gestione el estado del spinner.
-      // Pero si estamos en modo verbose, lo mostramos aquí para tener el contexto completo.
+      
+      const esUltimoIntento = i === maxIntentos - 1;
+      
+      logger.warn(` -> Error en petición. Reintentando en ${API_CONFIG.RETRY_DELAY_MS / 1000}s... (Intento ${i + 1}/${maxIntentos})`);
+      
       if (SCRIPT_SETTINGS.VERBOSE_MODE) {
-        console.error(`\nError en fetch para rango ${fechaIniStr} - ${fechaFinStr}:`, error);
+        console.error(`\nError en fetch para rango ${fechaIniStr} - ${fechaFinStr}:`, error.message);
       }
-      throw error; // Lanzamos el error para que la lógica de main.js lo maneje
+      
+      if (esUltimoIntento) {
+        // Si es el último intento y falla, ahora sí propagamos el error.
+        throw new Error(`La petición falló definitivamente para el rango ${fechaIniStr} - ${fechaFinStr} tras ${maxIntentos} intentos.`);
+      }
+      
+      // Espera antes del siguiente reintento
+      await sleep(API_CONFIG.RETRY_DELAY_MS);
+      // 'continue' es implícito al final del bloque de bucle, no es necesario añadirlo.
+      
     }
   }
   throw new Error(`La petición falló definitivamente para el rango ${fechaIniStr} - ${fechaFinStr}`);
