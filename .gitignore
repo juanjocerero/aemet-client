@@ -1,0 +1,49 @@
+# Fichero .gitignore para el proyecto de descarga de datos de AEMET
+
+# 1. Dependencias y Logs
+# ----------------------
+# Ignorar la carpeta de módulos de Node, que se reinstala con `npm install`
+node_modules/
+
+# Logs de debug de npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 2. Ficheros de Salida Generados por el Script
+# ---------------------------------------------
+# Ignorar TODAS las carpetas de salida generadas por el script.
+# El patrón coincide con el formato [estacionId]_[fecha]_[fecha]
+# El /* al final asegura que se ignora el contenido de la carpeta también.
+datos_*_????????_????????/
+
+# Por seguridad, ignorar cualquier fichero CSV en la raíz, por si ocurre un error.
+*.csv
+
+# 3. Ficheros de Entorno
+# ----------------------
+# Ignorar ficheros de variables de entorno que podrían contener secretos como API keys.
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 4. Ficheros del Sistema Operativo
+# ---------------------------------
+# Ficheros de metadatos de macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Ficheros de metadatos de Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+
+# 5. Ficheros del Editor de Código
+# --------------------------------
+.vscode/
+.idea/
