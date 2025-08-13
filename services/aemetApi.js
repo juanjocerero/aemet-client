@@ -50,11 +50,13 @@ export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId
       logger.setError(mensajeReintento);
       
       if (SCRIPT_SETTINGS.VERBOSE_MODE) {
-        console.error(`\nError en fetch para rango ${fechaIniStr} - ${fechaFinStr}:`, error.message);
+        // El \n inicial asegura que el log detallado aparezca en su propia línea
+        // sin ser afectado por la reescritura del spinner.
+        console.error(`\nDetalles del error:`, error);
       }
       
       if (esUltimoIntento) {
-        // Si es el último intento y falla, ahora sí propagamos el error.
+        // Si es el último intento, ahora sí propagamos el error final.
         throw new Error(`La petición falló definitivamente para el rango ${fechaIniStr} - ${fechaFinStr} tras ${maxIntentos} intentos.`);
       }
       
