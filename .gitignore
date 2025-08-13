@@ -48,4 +48,8 @@ ehthumbs_vista.db
 .vscode/
 .idea/
 
+# Bundle para LLMs
 bundle.txt
+
+# Fichero de entorno
+.env

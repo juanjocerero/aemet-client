@@ -48,7 +48,7 @@ export async function procesarEstacion(estacionId, apiKey, fechaInicio, fechaFin
     try {
       const fechaIniStr = format(rango.start, "yyyy-MM-dd'T'HH:mm:ss'UTC'");
       const fechaFinStr = format(rango.end, "yyyy-MM-dd'T'HH:mm:ss'UTC'");
-      const datosBrutos = await obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId, apiKey);
+      const datosBrutos = await obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId);
       if (datosBrutos?.length > 0) {
         todosLosDatos.push(...normalizarDatos(datosBrutos));
       }
@@ -76,7 +76,7 @@ export async function procesarEstacion(estacionId, apiKey, fechaInicio, fechaFin
     
     const fInicioFmt = format(fechaInicio, 'yyyyMMdd');
     const fFinFmt = format(fechaFin, 'yyyyMMdd');
-    const nombreDirectorio = `${estacionId}_${fInicioFmt}_${fFinFmt}`;
+    const nombreDirectorio = `datos_${estacionId}_${fInicioFmt}_${fFinFmt}`;
     
     await fs.mkdir(nombreDirectorio, { recursive: true });
     

@@ -16,6 +16,7 @@
   "dependencies": {
     "csv": "^6.4.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.1",
     "lodash-es": "^4.17.21",
     "ora": "^8.2.0"
   },

@@ -33,6 +33,13 @@ async function iniciarProcesoInteractivo() {
   // Se ejecuta justo al inicio.
   setupFromCLIArgs();
 
+  // Validar que la API Key esté disponible en el entorno
+  if (!process.env.AEMET_API_KEY) {
+    logger.fail('Error crítico: La variable de entorno AEMET_API_KEY no está definida.');
+    logger.info('Por favor, crea un fichero .env en la raíz del proyecto y añade la línea: AEMET_API_KEY="tu_clave"');
+    process.exit(1);
+  }
+
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   const ask = (query) => new Promise(resolve => rl.question(query, resolve));
 
@@ -40,9 +47,6 @@ async function iniciarProcesoInteractivo() {
   logger.log(logger.magentaBold('--- Configuración del Script de Descarga de Aemet ---'));
 
   try {
-    const apiKey = await ask(logger.query('🔑 Introduce tu API Key de Aemet: '));
-    if (!apiKey) throw new Error('La API Key es obligatoria.');
-
     const estacionesInput = await ask(logger.query('📡 Introduce ID(s) de estación (ej: 5530E,9434) [Por defecto: 5530E]: '));
     const estaciones = (estacionesInput || '5530E').split(',').map(s => s.trim());
 
@@ -57,7 +61,7 @@ async function iniciarProcesoInteractivo() {
     logger.info(`\nSe procesarán ${estaciones.length} estación(es) de forma secuencial.`);
 
     for (const estacion of estaciones) {
-      await procesarEstacion(estacion, apiKey, fechaInicio, fechaFin);
+      await procesarEstacion(estacion, fechaInicio, fechaFin);
       logger.succeed(`Proceso para la estación ${estacion} finalizado.`);
     }
 

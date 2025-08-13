@@ -4,7 +4,11 @@ import { logger } from '../utils/consoleLogger.js';
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId, apiKey) {
+export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId) {
+
+  // La clave se lee directamente de las variables de entorno
+  const apiKey = process.env.AEMET_API_KEY;
+
   const apiUrl = `https://opendata.aemet.es/opendata/api/valores/climatologicos/diarios/datos/fechaini/${fechaIniStr}/fechafin/${fechaFinStr}/estacion/${estacionId}`;
   const maxIntentos = Math.floor(API_CONFIG.MAX_RETRY_SECONDS * 1000 / API_CONFIG.RETRY_DELAY_MS);
   
