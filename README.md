@@ -94,4 +94,4 @@ Dentro de esta carpeta, encontrarás tres ficheros CSV:
 
 ## ⚖️ Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el fichero `LICENSE` para más detalles.````
+Este proyecto está bajo la Licencia MIT. Consulta el fichero `LICENSE` para más detalles.
