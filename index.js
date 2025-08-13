@@ -24,7 +24,7 @@ function setupFromCLIArgs() {
       logger.warn('Modo Verbose activado. Se mostrarán los errores completos.');
     }
   } catch (error) {
-    logger.error(`Error al parsear los argumentos: ${error.message}`);
+    logger.fail(`Error al parsear los argumentos: ${error.message}`);
     process.exit(1);
   }
 }
@@ -36,21 +36,21 @@ async function iniciarProcesoInteractivo() {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   const ask = (query) => new Promise(resolve => rl.question(query, resolve));
 
-  logger.info(logger.magentaBold('--- Configuración del Script de Descarga de AEMET ---'));
+  // Usamos el nuevo método 'log' para que no interactúe con el spinner
+  logger.log(logger.magentaBold('--- Configuración del Script de Descarga de Aemet ---'));
 
   try {
-    const queryColor = logger.cyan;
-    const apiKey = await ask(`${queryColor('🔑 Introduce tu API Key de AEMET: ')}`);
+    const apiKey = await ask(logger.query('🔑 Introduce tu API Key de Aemet: '));
     if (!apiKey) throw new Error('La API Key es obligatoria.');
 
-    const estacionesInput = await ask(`${queryColor('📡 Introduce ID(s) de estación (ej: 5530E,9434X) [5530E]: ')}`);
+    const estacionesInput = await ask(logger.query('📡 Introduce ID(s) de estación (ej: 5530E,9434) [Por defecto: 5530E]: '));
     const estaciones = (estacionesInput || '5530E').split(',').map(s => s.trim());
 
-    const fechaInicioInput = await ask(`${queryColor('🗓️  Fecha de inicio (DD/MM/YYYY) [01/01/1972]: ')}`);
+    const fechaInicioInput = await ask(logger.query('🗓️  Introduce la fecha de inicio (DD/MM/YYYY) [Por defecto: 01/01/1972]: '));
     const fechaInicio = fechaInicioInput ? parse(fechaInicioInput, 'dd/MM/yyyy', new Date()) : new Date('1972-01-01T00:00:00Z');
     if (!isValid(fechaInicio)) throw new Error('Formato de fecha de inicio no válido. Usa DD/MM/YYYY.');
 
-    const fechaFinInput = await ask(`${queryColor('🗓️  Fecha de fin (DD/MM/YYYY) [Hoy]: ')}`);
+    const fechaFinInput = await ask(logger.query('🗓️  Introduce la fecha de fin (DD/MM/YYYY) [Por defecto: Hoy]: '));
     const fechaFin = fechaFinInput ? parse(fechaFinInput, 'dd/MM/yyyy', new Date()) : new Date();
     if (!isValid(fechaFin)) throw new Error('Formato de fecha de fin no válido. Usa DD/MM/YYYY.');
     
@@ -58,13 +58,13 @@ async function iniciarProcesoInteractivo() {
 
     for (const estacion of estaciones) {
       await procesarEstacion(estacion, apiKey, fechaInicio, fechaFin);
-      logger.success(`\n✅ Proceso para la estación ${estacion} finalizado.`);
+      logger.succeed(`Proceso para la estación ${estacion} finalizado.`);
     }
 
-    logger.success(`\n\n🎉🎉🎉 ¡Todos los procesos han finalizado! 🎉🎉🎉`);
+    logger.log(`\n\n${logger.magentaBold('🎉🎉🎉 ¡Todos los procesos han finalizado! 🎉🎉🎉')}`);
 
   } catch (error) {
-    logger.error(`\nError fatal durante la configuración: ${error.message}`);
+    logger.fail(`\nError fatal durante la configuración: ${error.message}`);
   } finally {
     rl.close();
   }

@@ -1,6 +1,5 @@
 // utils/dataProcessor.js
 import { parse } from 'date-fns';
-import { logger } from './consoleLogger.js';
 
 const toTitleCase = (texto) => {
   if (!texto) return '';
@@ -14,7 +13,6 @@ const toNumber = (valor) => {
 };
 
 export function normalizarDatos(datosBrutos) {
-  logger.info('   Normalizando los datos recibidos...');
   return datosBrutos.map(r => ({
     fecha: r.fecha,
     date: parse(r.fecha, 'yyyy-MM-dd', new Date()),
@@ -30,7 +28,6 @@ export function normalizarDatos(datosBrutos) {
 }
 
 export function deduplicarPorFecha(datos) {
-  logger.info('Deduplicando registros por fecha...');
   const mapaDeDatos = new Map(datos.map(r => [new Date(r.fecha).getTime(), r]));
   const datosUnicos = Array.from(mapaDeDatos.values());
   datosUnicos.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));

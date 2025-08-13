@@ -34,7 +34,7 @@ async function guardarCSVGenerico(datos, nombreFichero, columnas, castConfig) {
     await fs.writeFile(nombreFichero, csvData);
     logger.success(`✅ Fichero guardado con éxito como "${nombreFichero}".`);
   } catch (error) {
-    logger.error(`❌ Error al guardar el fichero CSV: ${error.message}`);
+    logger.fail(`❌ Error al guardar el fichero CSV: ${error.message}`);
   }
 }
 
@@ -71,7 +71,6 @@ export async function guardarAnalisisMensualEnCSV(datos, nombreFichero) {
     'max_tmed', 'd_max_tmed', 'max_tmax', 'd_max_tmax', 'max_tmin', 'd_max_tmin',
     'max_prec', 'd_max_prec', 'max_racha', 'd_max_racha', 'max_velmedia', 'd_max_velmedia',
     'min_tmed', 'd_min_tmed', 'min_tmax', 'd_min_tmax', 'min_tmin', 'd_min_tmin',
-    'min_velmedia', 'd_min_velmedia',
   ];
   
   const castMensual = {
@@ -93,7 +92,6 @@ export async function guardarAnalisisAnualEnCSV(datos, nombreFichero) {
     'max_tmed', 'd_max_tmed', 'max_tmax', 'd_max_tmax', 'max_tmin', 'd_max_tmin',
     'max_prec', 'd_max_prec', 'max_racha', 'd_max_racha', 'max_velmedia', 'd_max_velmedia',
     'min_tmed', 'd_min_tmed', 'min_tmax', 'd_min_tmax', 'min_tmin', 'd_min_tmin',
-    'min_velmedia', 'd_min_velmedia',
   ];
 
   const castAnual = {

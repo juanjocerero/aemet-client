@@ -1,102 +1,112 @@
+import { format } from 'date-fns';
 import fs from 'fs/promises';
 import path from 'path';
-import { format } from 'date-fns';
 import { API_CONFIG, SCRIPT_SETTINGS } from './config.js';
 import { generarRangosDePeticion, formatDisplayDateRange } from './utils/dateUtils.js';
 import { normalizarDatos, deduplicarPorFecha } from './utils/dataProcessor.js';
 import { analizarDatosMensuales, analizarDatosAnuales } from './utils/dataAnalyzer.js';
 import { obtenerDatosParaRango } from './services/aemetApi.js';
-import { 
-  guardarDatosDiariosEnCSV, 
-  guardarAnalisisMensualEnCSV, 
-  guardarAnalisisAnualEnCSV 
+import {
+  guardarDatosDiariosEnCSV,
+  guardarAnalisisMensualEnCSV,
+  guardarAnalisisAnualEnCSV
 } from './services/csvWriter.js';
 import { logger } from './utils/consoleLogger.js';
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+// --- Código completo de la función ---
+
+/**
+* Orquesta la descarga, análisis y guardado de datos para una sola estación.
+* @param {string} estacionId - Indicativo de la estación a procesar.
+* @param {string} apiKey - Clave de la API.
+* @param {Date} fechaInicio - Fecha de inicio del proceso.
+* @param {Date} fechaFin - Fecha de fin del proceso.
+*/
 export async function procesarEstacion(estacionId, apiKey, fechaInicio, fechaFin) {
-  logger.info(`\n${logger.magentaBold('================================================')}`);
-  logger.info(`  🚀 Iniciando proceso para la estación: ${estacionId} 🚀`);
-  logger.info(`${logger.magentaBold('=================================================')}`);
+  // Imprime el banner inicial usando el logger de texto plano
+  logger.log(`\n${logger.magentaBold('=================================================')}`);
+  logger.log(`  🚀 Iniciando proceso para la estación: ${logger.highlight(estacionId)} 🚀`);
+  logger.log(`${logger.magentaBold('=================================================')}`);
   
-  const rangos = generarRangosDePeticion(fechaInicio, fechaFin);
   let todosLosDatos = [];
   const errores = [];
+  const rangos = generarRangosDePeticion(fechaInicio, fechaFin);
   
-  // ... (el bucle for para obtener datos no cambia)
+  // Inicia el spinner para la tarea de descarga de datos
+  logger.start(`[1/${rangos.length}] Obteniendo datos para la estación ${estacionId}...`);
+  
   for (let i = 0; i < rangos.length; i++) {
     const rango = rangos[i];
-    const fechaIniStr = format(rango.start, "yyyy-MM-dd'T'HH:mm:ss'UTC'");
-    const fechaFinStr = format(rango.end, "yyyy-MM-dd'T'HH:mm:ss'UTC'");
+    const rangoDisplay = formatDisplayDateRange(rango.start, rango.end);
     
-    logger.logProgress(i + 1, rangos.length, estacionId, formatDisplayDateRange(rango.start, rango.end));
+    // Actualiza el texto del spinner en cada iteración
+    logger.setText(`[${i + 1}/${rangos.length}] Procesando rango ${logger.highlight(rangoDisplay)}`);
     
     try {
+      const fechaIniStr = format(rango.start, "yyyy-MM-dd'T'HH:mm:ss'UTC'");
+      const fechaFinStr = format(rango.end, "yyyy-MM-dd'T'HH:mm:ss'UTC'");
       const datosBrutos = await obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId, apiKey);
       if (datosBrutos?.length > 0) {
-        const datosNormalizados = normalizarDatos(datosBrutos);
-        todosLosDatos.push(...datosNormalizados);
-        logger.success(`   ✅ Éxito. Obtenidos ${datosNormalizados.length} registros.`);
-      } else {
-        logger.warn(`   🟡 No se encontraron datos para este rango.`);
+        todosLosDatos.push(...normalizarDatos(datosBrutos));
       }
     } catch (error) {
-      logger.error(`   ❌ ERROR: No se pudieron obtener los datos.`);
-
-      // Muestra el error completo si está en modo verbose.
+      // Detiene el spinner con un mensaje de fallo
+      logger.fail(`Error en el rango ${rangoDisplay}.`);
       if (SCRIPT_SETTINGS.VERBOSE_MODE) {
         console.error('Detalles del error:', error);
       }
-      // Almacenamos el mensaje de error simple o el objeto completo para el resumen final
-      const errorToStore = SCRIPT_SETTINGS.VERBOSE_MODE ? error : { message: error.message };
-
-      errores.push({ estacionId, rango: formatDisplayDateRange(rango.start, rango.end), error: errorToStore });
+      errores.push({ estacionId, rango: rangoDisplay, error });
     }
     
     if (i < rangos.length - 1) await sleep(API_CONFIG.REQUEST_INTERVAL_MS);
   }
   
+  // Marca la tarea de descarga como exitosa
+  logger.succeed(`Se han completado todas las peticiones para ${estacionId}.`);
   
-  // --- Resumen, Guardado y Análisis ---
-  logger.info(`\n--- Resumen para la estación ${estacionId} ---`);
   if (todosLosDatos.length > 0) {
     const datosFinales = deduplicarPorFecha(todosLosDatos);
-    logger.info(`Se han obtenido ${datosFinales.length} registros únicos.`);
+    logger.info(`Se han obtenido ${logger.highlight(datosFinales.length)} registros únicos.`);
     
     const fInicioFmt = format(fechaInicio, 'yyyyMMdd');
     const fFinFmt = format(fechaFin, 'yyyyMMdd');
+    const nombreDirectorio = `${estacionId}_${fInicioFmt}_${fFinFmt}`;
     
-    // --- Lógica de guardado en carpetas ---
-    // 1. Crear el nombre del directorio de salida.
-    const nombreDirectorio = `datos_${estacionId}_${fInicioFmt}_${fFinFmt}`;
-    
-    // 2. Crear el directorio. { recursive: true } evita errores si ya existe.
     await fs.mkdir(nombreDirectorio, { recursive: true });
-    logger.info(`\nLos resultados se guardarán en la carpeta: ${logger.highlight(nombreDirectorio)}`);
     
-    // 3. Guardar CSV diario dentro de la nueva carpeta.
-    const nombreFicheroDiario = path.join(nombreDirectorio, `diarios_${estacionId}_${fInicioFmt}_${fFinFmt}.csv`);
-    await guardarDatosDiariosEnCSV(datosFinales, nombreFicheroDiario);
+    // Define las tareas de guardado de ficheros
+    const ficheros = [
+      {
+        nombre: `${estacionId}_${fInicioFmt}_${fFinFmt}.csv`,
+        proceso: () => guardarDatosDiariosEnCSV(datosFinales, path.join(nombreDirectorio, ficheros[0].nombre)),
+        label: 'datos diarios'
+      },
+      {
+        nombre: `mensuales_${estacionId}_${fInicioFmt}_${fFinFmt}.csv`,
+        proceso: () => guardarAnalisisMensualEnCSV(analizarDatosMensuales(datosFinales), path.join(nombreDirectorio, ficheros[1].nombre)),
+        label: 'análisis mensual'
+      },
+      {
+        nombre: `anuales_${estacionId}_${fInicioFmt}_${fFinFmt}.csv`,
+        proceso: () => guardarAnalisisAnualEnCSV(analizarDatosAnuales(datosFinales), path.join(nombreDirectorio, ficheros[2].nombre)),
+        label: 'análisis anual'
+      }
+    ];
     
-    // 4. Realizar y guardar análisis mensual.
-    logger.info(`\nIniciando análisis de datos mensuales...`);
-    const datosMensuales = analizarDatosMensuales(datosFinales);
-    const nombreFicheroMensual = path.join(nombreDirectorio, `mensuales_${estacionId}_${fInicioFmt}_${fFinFmt}.csv`);
-    await guardarAnalisisMensualEnCSV(datosMensuales, nombreFicheroMensual);
+    // Ejecuta cada tarea de guardado con su propio spinner
+    for (const fichero of ficheros) {
+      logger.start(`Generando fichero de ${fichero.label}...`);
+      await fichero.proceso();
+      logger.succeed(`Fichero ${logger.highlight(fichero.nombre)} guardado en ${logger.highlight(nombreDirectorio)}.`);
+    }
     
-    // 5. Realizar y guardar análisis anual.
-    logger.info(`\nIniciando análisis de datos anuales...`);
-    const datosAnuales = analizarDatosAnuales(datosFinales);
-    const nombreFicheroAnual = path.join(nombreDirectorio, `anuales_${estacionId}_${fInicioFmt}_${fFinFmt}.csv`);
-    await guardarAnalisisAnualEnCSV(datosAnuales, nombreFicheroAnual);
   } else {
-    logger.warn(`⚠️ La operación para ${estacionId} finalizó sin obtener datos.`);
+    logger.warn(`La operación para ${estacionId} finalizó sin obtener datos.`);
   }
   
   if (errores.length > 0) {
-    logger.error(`\n--- Log de Errores para ${estacionId} ---`);
-    console.dir(errores, { depth: null });
+    logger.fail('Se produjeron errores durante la descarga. Revisa el log si estás en modo verbose.');
   }
-  
 }
