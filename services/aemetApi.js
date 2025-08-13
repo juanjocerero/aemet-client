@@ -15,9 +15,8 @@ export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId
       });
       
       if (resInicial.status === 429) {
-        logger.warn(`   -> Rate limiting. Reintentando en ${API_CONFIG.RETRY_DELAY_MS / 1000}s... (Intento ${i + 1}/${maxIntentos})`);
-        await sleep(API_CONFIG.RETRY_DELAY_MS);
-        continue;
+        // Lanza un error específico para ser capturado por el catch de abajo
+        throw new Error(`Rate limiting (429)`);
       }
       if (!resInicial.ok) {
         // Lanza un error para ser capturado por el catch de este bloque try
@@ -35,7 +34,9 @@ export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId
         // Lanza un error para ser capturado por el catch de este bloque try
         throw new Error(`Error al obtener datos finales: ${resDatosFinales.status} ${resDatosFinales.statusText}`);
       }
-      // Si todo ha ido bien, retorna los datos y sale de la función
+      
+      // Si la petición tiene éxito, limpiamos cualquier mensaje de error anterior
+      logger.setError(null);
       return await resDatosFinales.json();
       
     } catch (error) {
@@ -43,6 +44,9 @@ export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId
       const esUltimoIntento = i === maxIntentos - 1;
       
       logger.warn(` -> Error en petición. Reintentando en ${API_CONFIG.RETRY_DELAY_MS / 1000}s... (Intento ${i + 1}/${maxIntentos})`);
+      
+      // Usamos setError para mostrar el estado sin detener el spinner principal
+      logger.setError(mensajeReintento);
       
       if (SCRIPT_SETTINGS.VERBOSE_MODE) {
         console.error(`\nError en fetch para rango ${fechaIniStr} - ${fechaFinStr}:`, error.message);

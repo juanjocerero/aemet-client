@@ -8,71 +8,106 @@ const spinner = ora({
   color: 'cyan',
 });
 
-export const logger = {
-  /**
-   * Inicia una nueva tarea con un spinner.
-   * @param {string} text - El texto inicial para la tarea.
-   */
-  start: (text) => {
-    spinner.start(text);
-  },
+// Variables para gestionar el estado del texto
+let currentProgressText = '';
+let currentErrorText = '';
 
-  /**
-   * Actualiza el texto de la tarea actual sin crear una nueva línea.
-   * @param {string} text - El nuevo texto para el spinner.
-   */
-  setText: (text) => {
-    spinner.text = text;
+// Función interna para actualizar el texto del spinner
+function _updateSpinnerText() {
+  spinner.text = `${currentProgressText}${currentErrorText}`;
+}
+
+export const logger = {
+  start: (text) => {
+    currentProgressText = text;
+    currentErrorText = ''; // Resetea cualquier error anterior
+    _updateSpinnerText();
+    spinner.start();
   },
   
   /**
-   * Marca la tarea actual como exitosa usando el emoji '✅'.
-   * @param {string} [text] - Texto final opcional.
-   */
-  succeed: (text) => {
-    spinner.stopAndPersist({
-      symbol: '✅',
-      text: text,
-    });
+  * Actualiza el texto de la tarea actual sin crear una nueva línea.
+  * @param {string} text - El nuevo texto para el spinner.
+  */
+  setText: (text) => {
+    currentProgressText = text;
+    _updateSpinnerText();
   },
-
+  
   /**
-   * Marca la tarea actual como fallida usando el emoji '❌'.
-   * @param {string} [text] - Texto final opcional.
-   */
-  fail: (text) => {
+  * Establece o limpia un mensaje de error sin detener el spinner
+  * @param {string} errorMessage - El nuevo texto para el spinner.
+  */
+  setError: (errorMessage) => {
+    if (errorMessage) {
+      currentErrorText = ` ${colors.red}| ${errorMessage}${colors.reset}`;
+    } else {
+      currentErrorText = ''; // Limpia el mensaje de error
+    }
+    _updateSpinnerText();
+  },
+  
+  /**
+  * Marca la tarea actual como exitosa usando el emoji '✅'.
+  * @param {string} [text] - Texto final opcional.
+  */
+  succeed: (text) => {
+    spinner.stopAndPersist({ symbol: '✅', text: text });
+    currentProgressText = '';
+    currentErrorText = '';
+  },
+  
+  /**
+  * Marca la tarea actual como fallida usando el emoji '❌'.
+  * Se usará solo para errores fatales que detienen todo el script.
+  * @param {string} [text] - Texto final opcional.
+  */
+  failAndStop: (text) => {
     spinner.stopAndPersist({
       symbol: '❌',
       text: colors.red + text + colors.reset,
     });
+    currentProgressText = '';
+    currentErrorText = '';
   },
 
   /**
-   * Imprime un mensaje de información permanente.
-   * @param {string} text - El mensaje a imprimir.
-   */
+  * 'fail' ahora es un alias para setError para no detener el proceso
+  * y mantener compatibilidad si se usa en otros sitios.
+  * @param {string} [text] - Texto final opcional.
+  */
+  fail: (text) => {
+    logger.setError(text);
+  },
+  
+  /**
+  * Imprime un mensaje de información permanente.
+  * @param {string} text - El mensaje a imprimir.
+  */
   info: (text) => {
     spinner.info(text);
   },
   
   /**
-   * Imprime un mensaje de advertencia permanente.
-   * @param {string} text - El mensaje a imprimir.
-   */
+  * Imprime un mensaje de advertencia permanente.
+  * @param {string} text - El mensaje a imprimir.
+  */
   warn: (text) => {
     spinner.warn(colors.yellow + text + colors.reset);
   },
   
   /**
-   * Imprime texto plano en la consola sin interactuar con el spinner.
-   * @param {string} text - El texto a imprimir.
-   */
+  * Imprime texto plano en la consola sin interactuar con el spinner.
+  * @param {string} text - El texto a imprimir.
+  */
   log: (text) => {
-    // Si el spinner está activo, lo detenemos para no sobreescribir la línea.
     if (spinner.isSpinning) {
       spinner.stop();
+      console.log(text);
+      spinner.start(); // Reinicia el spinner
+    } else {
+      console.log(text);
     }
-    console.log(text);
   },
   
   // --- Funciones de formato de texto ---

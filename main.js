@@ -35,13 +35,14 @@ export async function procesarEstacion(estacionId, apiKey, fechaInicio, fechaFin
   const rangos = generarRangosDePeticion(fechaInicio, fechaFin);
   
   // Inicia el spinner para la tarea de descarga de datos
-  logger.start(`[1/${rangos.length}] Obteniendo datos para la estación ${estacionId}...`);
+  logger.start(`[1/${rangos.length}] Obteniendo datos para la estaci├│n ${estacionId}...`);
   
   for (let i = 0; i < rangos.length; i++) {
     const rango = rangos[i];
     const rangoDisplay = formatDisplayDateRange(rango.start, rango.end);
     
     // Actualiza el texto del spinner en cada iteración
+    logger.setError(null); 
     logger.setText(`[${i + 1}/${rangos.length}] Procesando rango ${logger.highlight(rangoDisplay)}`);
     
     try {
@@ -52,18 +53,21 @@ export async function procesarEstacion(estacionId, apiKey, fechaInicio, fechaFin
         todosLosDatos.push(...normalizarDatos(datosBrutos));
       }
     } catch (error) {
-      // Detiene el spinner con un mensaje de fallo
-      logger.fail(`Error en el rango ${rangoDisplay}.`);
+      // Esto mostrará el error al lado del spinner sin detenerlo.
+      logger.setError(`Error en rango ${rangoDisplay}. Revisa logs.`);
+      
       if (SCRIPT_SETTINGS.VERBOSE_MODE) {
         console.error('Detalles del error:', error);
       }
+      
       errores.push({ estacionId, rango: rangoDisplay, error });
     }
     
     if (i < rangos.length - 1) await sleep(API_CONFIG.REQUEST_INTERVAL_MS);
   }
   
-  // Marca la tarea de descarga como exitosa
+  // Limpiamos cualquier error residual antes de finalizar.
+  logger.setError(null);
   logger.succeed(`Se han completado todas las peticiones para ${estacionId}.`);
   
   if (todosLosDatos.length > 0) {
