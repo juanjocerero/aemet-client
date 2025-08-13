@@ -26,9 +26,9 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 */
 export async function procesarEstacion(estacionId, apiKey, fechaInicio, fechaFin) {
   // Imprime el banner inicial usando el logger de texto plano
-  logger.log(`\n${logger.magentaBold('=================================================')}`);
+  logger.log(`\n${logger.magentaBold('==================================================')}`);
   logger.log(`  🚀 Iniciando proceso para la estación: ${logger.highlight(estacionId)} 🚀`);
-  logger.log(`${logger.magentaBold('=================================================')}`);
+  logger.log(`${logger.magentaBold('==================================================')}`);
   
   let todosLosDatos = [];
   const errores = [];
