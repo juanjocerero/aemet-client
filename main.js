@@ -132,8 +132,4 @@ export async function procesarEstacion(estacionId, fechaInicio, fechaFin) {
   if (errores.length > 0) {
     logger.fail('Se produjeron errores durante la descarga. Revisa el log si estás en modo verbose.');
   }
-  
-  if (errores.length > 0) {
-    logger.fail('Se produjeron errores durante la descarga. Revisa el log si estás en modo verbose.');
-  }
 }
