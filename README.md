@@ -1,15 +1,3 @@
-¡Por supuesto! Es fundamental que el `README.md` refleje el estado actual del proyecto, especialmente con las mejoras de usabilidad que hemos añadido.
-
-He actualizado el `README.md` para incluir:
-1.  La nueva opción de línea de comandos `--verbose`.
-2.  Una descripción de la nueva y mejorada interfaz de consola con el spinner de `ora`.
-3.  Un ejemplo visual de cómo se ve ahora la salida del script.
-
-Aquí tienes el contenido completo y actualizado del fichero `README.md`.
-
----
-
-````markdown
 # Extractor y Analizador de Datos Climáticos de AEMET
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -143,4 +131,4 @@ El log final tendrá un aspecto limpio y claro:
 
 ## ⚖️ Licencia
 
-Este proyecto está bajo la Licencia MIT.
+Este proyecto está bajo la Licencia MIT. Consulta el fichero `LICENSE` para más detalles.
