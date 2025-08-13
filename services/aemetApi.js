@@ -10,6 +10,9 @@ export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId
   
   for (let i = 0; i < maxIntentos; i++) {
     try {
+      // Al empezar un nuevo intento, limpiamos cualquier mensaje de estado anterior.
+      logger.setWarning(null);
+      
       const resInicial = await fetch(apiUrl, {
         headers: { 'api_key': apiKey, 'Accept': 'application/json' },
       });
@@ -26,7 +29,7 @@ export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId
       const resUrlDatos = await resInicial.json();
       if (resUrlDatos.estado !== 200) {
         // Lanza un error para ser capturado por el catch de este bloque try
-        throw new Error(`Error en la respuesta de AEMET: ${resUrlDatos.descripcion}`);
+        throw new Error(`Error en la respuesta de Aemet: ${resUrlDatos.descripcion}`);
       }
       
       const resDatosFinales = await fetch(resUrlDatos.datos);
@@ -36,23 +39,21 @@ export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId
       }
       
       // Si la petición tiene éxito, limpiamos cualquier mensaje de error anterior
-      logger.setError(null);
+      logger.setWarning(null);
       return await resDatosFinales.json();
       
     } catch (error) {
       
       const esUltimoIntento = i === maxIntentos - 1;
-      const mensajeReintento = `Reintentando en ${API_CONFIG.RETRY_DELAY_MS / 1000}s... (Intento ${i + 1}/${maxIntentos})`;
+      const mensajeReintento = `Error en petición. Reintentando en ${API_CONFIG.RETRY_DELAY_MS / 1000}s... (Intento ${i + 1}/${maxIntentos})`;      
       
-      logger.warn(` -> Error en petición. Reintentando en ${API_CONFIG.RETRY_DELAY_MS / 1000}s... (Intento ${i + 1}/${maxIntentos})`);
-      
-      // Usamos setError para mostrar el estado sin detener el spinner principal
-      logger.setError(mensajeReintento);
+      // Usamos setWarning para mostrar el mensaje EN LA MISMA LÍNEA, sin detener el spinner.
+      logger.setWarning(mensajeReintento);
       
       if (SCRIPT_SETTINGS.VERBOSE_MODE) {
         // El \n inicial asegura que el log detallado aparezca en su propia línea
         // sin ser afectado por la reescritura del spinner.
-        console.error(`\nDetalles del error:`, error);
+        console.error(`\n[VERBOSE] Detalles del error:`, error);
       }
       
       if (esUltimoIntento) {

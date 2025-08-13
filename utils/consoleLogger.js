@@ -10,17 +10,18 @@ const spinner = ora({
 
 // Variables para gestionar el estado del texto
 let currentProgressText = '';
-let currentErrorText = '';
+let currentStatusText = '';
 
 // Función interna para actualizar el texto del spinner
 function _updateSpinnerText() {
-  spinner.text = `${currentProgressText}${currentErrorText}`;
+  // Combina el texto de progreso con el estado (error/advertencia)
+  spinner.text = `${currentProgressText}${currentStatusText}`;
 }
 
 export const logger = {
   start: (text) => {
     currentProgressText = text;
-    currentErrorText = ''; // Resetea cualquier error anterior
+    currentStatusText = '';
     _updateSpinnerText();
     spinner.start();
   },
@@ -40,9 +41,23 @@ export const logger = {
   */
   setError: (errorMessage) => {
     if (errorMessage) {
-      currentErrorText = ` ${colors.red}| ${errorMessage}${colors.reset}`;
+      currentStatusText = ` ${colors.red}| ${errorMessage}${colors.reset}`;
     } else {
-      currentErrorText = ''; // Limpia el mensaje de error
+      currentStatusText = '';
+    }
+    _updateSpinnerText();
+  },
+  
+  /**
+  * Muestra una advertencia TEMPORAL al lado del spinner.
+  * Esto es lo que usaremos para los reintentos.
+  * @param {string} warningMessage - El nuevo texto para el spinner.
+  */
+  setWarning: (warningMessage) => {
+    if (warningMessage) {
+      currentStatusText = ` ${colors.yellow}| ${warningMessage}${colors.reset}`;
+    } else {
+      currentStatusText = '';
     }
     _updateSpinnerText();
   },
@@ -52,9 +67,9 @@ export const logger = {
   * @param {string} [text] - Texto final opcional.
   */
   succeed: (text) => {
-    spinner.stopAndPersist({ symbol: '✅', text: text });
     currentProgressText = '';
-    currentErrorText = '';
+    currentStatusText = '';
+    spinner.stopAndPersist({ symbol: '✅', text: text });
   },
   
   /**
@@ -67,10 +82,8 @@ export const logger = {
       symbol: '❌',
       text: colors.red + text + colors.reset,
     });
-    currentProgressText = '';
-    currentErrorText = '';
   },
-
+  
   /**
   * 'fail' ahora es un alias para setError para no detener el proceso
   * y mantener compatibilidad si se usa en otros sitios.
@@ -90,6 +103,8 @@ export const logger = {
   
   /**
   * Imprime un mensaje de advertencia permanente.
+  * Esta función SIEMPRE imprime en una nueva línea y detiene el spinner.
+  * La mantenemos por si se necesita, pero no la usaremos para los reintentos.
   * @param {string} text - El mensaje a imprimir.
   */
   warn: (text) => {
@@ -104,7 +119,7 @@ export const logger = {
     if (spinner.isSpinning) {
       spinner.stop();
       console.log(text);
-      spinner.start(); // Reinicia el spinner
+      spinner.start();
     } else {
       console.log(text);
     }
