@@ -42,6 +42,7 @@ export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId
     } catch (error) {
       
       const esUltimoIntento = i === maxIntentos - 1;
+      const mensajeReintento = `Reintentando en ${API_CONFIG.RETRY_DELAY_MS / 1000}s... (Intento ${i + 1}/${maxIntentos})`;
       
       logger.warn(` -> Error en petición. Reintentando en ${API_CONFIG.RETRY_DELAY_MS / 1000}s... (Intento ${i + 1}/${maxIntentos})`);
       
