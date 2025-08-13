@@ -13,6 +13,6 @@
   "dependencies": {
     "csv": "^6.4.1",
     "date-fns": "^4.1.0",
-    "lodash": "^4.17.21"
+    "lodash-es": "^4.17.21"
   }
 }
