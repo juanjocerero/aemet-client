@@ -1,102 +1,67 @@
-import fs from 'fs/promises';
+// services/csvWriter.js
 import { stringify } from 'csv-stringify';
-import { format } from 'date-fns';
-import { logger } from '../utils/consoleLogger.js';
+import fs from 'node:fs';
 
 /**
- * Guarda un array de objetos en un fichero CSV con configuración dinámica.
- * @param {Array<Object>} datos - Los datos a guardar.
- * @param {string} nombreFichero - El nombre del fichero de salida.
- * @param {Array<string|{key: string, header: string}>} columnas - La configuración de columnas.
- * @param {Object} castConfig - Opciones de formateo para los valores.
+ * Crea un stream de escritura CSV.
+ * Esta función configura un stream de escritura a un fichero y le conecta
+ * un transformador que convierte objetos JavaScript a formato CSV.
+ *
+ * @param {string} nombreFichero - La ruta completa donde se guardará el fichero.
+ * @param {Array<Object|string>} columnas - La configuración de columnas para csv-stringify.
+ * @param {Object} castConfig - La configuración de 'cast' para formatear valores.
+ * @returns {import('stream').Writable} Un stream escribible. Escribe objetos JS en este stream.
  */
-async function guardarCSVGenerico(datos, nombreFichero, columnas, castConfig) {
-  logger.info(`\nGenerando fichero CSV: "${nombreFichero}"...`);
-  try {
-    const csvStringifier = stringify({
-      header: true,
-      columns: columnas,
-      cast: castConfig,
-    });
+function crearStreamEscritorCSV(nombreFichero, columnas, castConfig) {
+  // Stream de escritura al sistema de ficheros
+  const streamFichero = fs.createWriteStream(nombreFichero);
 
-    const csvData = await new Promise((resolve, reject) => {
-      let output = '';
-      csvStringifier.on('readable', () => {
-        let row;
-        while ((row = csvStringifier.read()) !== null) { output += row; }
-      });
-      csvStringifier.on('error', reject);
-      csvStringifier.on('finish', () => resolve(output));
-      datos.forEach(registro => csvStringifier.write(registro));
-      csvStringifier.end();
-    });
+  // Transformador de objeto a CSV
+  const csvStringifier = stringify({
+    header: true,
+    columns: columnas,
+    cast: castConfig,
+  });
 
-    await fs.writeFile(nombreFichero, csvData);
-    logger.success(`✅ Fichero guardado con éxito como "${nombreFichero}".`);
-  } catch (error) {
-    logger.fail(`❌ Error al guardar el fichero CSV: ${error.message}`);
-  }
+  // Conectamos el transformador al stream del fichero.
+  // Lo que entre en csvStringifier será procesado y pasará a streamFichero.
+  csvStringifier.pipe(streamFichero);
+
+  // Gestionamos errores para no dejar el proceso colgado.
+  streamFichero.on('error', (err) => console.error(`Error de escritura en ${nombreFichero}:`, err));
+  csvStringifier.on('error', (err) => console.error(`Error del stringifier para ${nombreFichero}:`, err));
+
+  // 4. Devolvemos el transformador. Este es nuestro "punto de entrada" para los datos.
+  return csvStringifier;
 }
 
-/**
- * Guarda los datos diarios de la AEMET.
- */
-export async function guardarDatosDiariosEnCSV(datos, nombreFichero) {
-  const columnasDiarias = [
-    { key: 'fecha', header: 'fecha' },
-    { key: 'indicativo', header: 'idema' },
-    { key: 'nombre', header: 'nombre' },
-    { key: 'tmed', header: 'tmed' },
-    { key: 'tmin', header: 'tmin' },
-    { key: 'tmax', header: 'tmax' },
-    { key: 'prec', header: 'prec' },
-    { key: 'velmedia', header: 'vmed' },
+// Las funciones exportadas ahora simplemente configuran y devuelven el stream.
+export function crearStreamCSVDiario(nombreFichero) {
+  const columnas = [
+    { key: 'fecha', header: 'fecha' }, { key: 'indicativo', header: 'idema' },
+    { key: 'nombre', header: 'nombre' }, { key: 'tmed', header: 'tmed' },
+    { key: 'tmin', header: 'tmin' }, { key: 'tmax', header: 'tmax' },
+    { key: 'prec', header: 'prec' }, { key: 'velmedia', header: 'vmed' },
     { key: 'racha', header: 'racha' },
   ];
-  
-  const castDiario = {
-    date: (value) => format(value, 'yyyy-MM-dd'),
+  const cast = {
     number: (value) => (typeof value === 'number' ? value.toString().replace('.', ',') : value),
   };
-  
-  await guardarCSVGenerico(datos, nombreFichero, columnasDiarias, castDiario);
+  return crearStreamEscritorCSV(nombreFichero, columnas, cast);
 }
 
-/**
- * Guarda los datos del análisis mensual en un fichero CSV.
- */
-export async function guardarAnalisisMensualEnCSV(datos, nombreFichero) {
-  const columnasMensuales = [
-    'fecha', 'avg_tmed', 'avg_tmax', 'avg_tmin', 'avg_prec', 'avg_velmedia',
-    'max_tmed', 'd_max_tmed', 'max_tmax', 'd_max_tmax', 'max_tmin', 'd_max_tmin',
-    'max_prec', 'd_max_prec', 'max_racha', 'd_max_racha', 'max_velmedia', 'd_max_velmedia',
-    'min_tmed', 'd_min_tmed', 'min_tmax', 'd_min_tmax', 'min_tmin', 'd_min_tmin',
-  ];
-  
-  const castMensual = {
-    // Formateamos los números para que usen la coma como separador decimal
-    number: (value) => (typeof value === 'number' ? value.toString().replace('.', ',') : value),
-  };
+// Los datos se generarán al final, por lo que la función de guardado se mantiene
+// pero se usará de una forma diferente desde main.js
 
-  await guardarCSVGenerico(datos, nombreFichero, columnasMensuales, castMensual);
-}
+export async function guardarAnalisisEnCSV(datos, nombreFichero, columnas, castConfig) {
+    const csvStringifier = stringify({ header: true, columns: columnas, cast: castConfig });
+    const streamFichero = fs.createWriteStream(nombreFichero);
+    csvStringifier.pipe(streamFichero);
 
-/**
- * Guarda los datos del análisis anual en un fichero CSV.
- */
-export async function guardarAnalisisAnualEnCSV(datos, nombreFichero) {
-  const columnasAnuales = [
-    // La cabecera es 'año', pero lee el dato de la propiedad 'fecha'
-    { key: 'fecha', header: 'año' }, 
-    'avg_tmed', 'avg_tmax', 'avg_tmin', 'avg_prec', 'avg_velmedia',
-    'max_tmed', 'd_max_tmed', 'max_tmax', 'd_max_tmax', 'max_tmin', 'd_max_tmin',
-    'max_prec', 'd_max_prec', 'max_racha', 'd_max_racha', 'max_velmedia', 'd_max_velmedia',
-    'min_tmed', 'd_min_tmed', 'min_tmax', 'd_min_tmax', 'min_tmin', 'd_min_tmin',
-  ];
-
-  const castAnual = {
-    number: (value) => (typeof value === 'number' ? value.toString().replace('.', ',') : value),
-  };
-
-  await guardarCSVGenerico(datos, nombreFichero, columnasAnuales, castAnual);
+    return new Promise((resolve, reject) => {
+        streamFichero.on('finish', resolve);
+        streamFichero.on('error', reject);
+        datos.forEach(registro => csvStringifier.write(registro));
+        csvStringifier.end();
+    });
 }

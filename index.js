@@ -1,4 +1,5 @@
 // index.js
+import 'dotenv/config';
 import readline from 'readline';
 import { parseArgs } from 'util';
 import { SCRIPT_SETTINGS } from './config.js';

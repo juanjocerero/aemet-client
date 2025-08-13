@@ -1,5 +1,5 @@
 // utils/dataProcessor.js
-import { parse } from 'date-fns';
+import { parse, isValid } from 'date-fns';
 
 const toTitleCase = (texto) => {
   if (!texto) return '';
@@ -24,12 +24,6 @@ export function normalizarDatos(datosBrutos) {
     tmax: toNumber(r.tmax),
     velmedia: toNumber(r.velmedia),
     racha: toNumber(r.racha),
-  }));
-}
-
-export function deduplicarPorFecha(datos) {
-  const mapaDeDatos = new Map(datos.map(r => [new Date(r.fecha).getTime(), r]));
-  const datosUnicos = Array.from(mapaDeDatos.values());
-  datosUnicos.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-  return datosUnicos;
+  }))
+  .filter(r => isValid(r.date));
 }
