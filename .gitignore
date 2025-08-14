@@ -54,5 +54,8 @@ bundle.txt
 # Fichero de entorno
 .env
 
-# Resultados de los análisis
+# Resultados de los análisis y otros ficheros innecesarios
+metodologia_calculo_verano.md
+metodologia_calculo_olas_calor.md
+plan_analisis.md
 analisis/

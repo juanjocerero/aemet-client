@@ -2,10 +2,10 @@
 import 'dotenv/config';
 import readline from 'readline';
 import { parseArgs } from 'util';
-import { SCRIPT_SETTINGS } from './config.js';
+import { SCRIPT_SETTINGS } from './src/config.js';
 import { parse, isValid } from 'date-fns';
-import { logger } from './utils/consoleLogger.js';
-import { procesarEstacion } from './main.js';
+import { logger } from './src/utils/consoleLogger.js';
+import { procesarEstacion } from './src/extraction-worker.js';
 
 /**
  * ¡Parsea los argumentos de la línea de comandos para configurar el script.

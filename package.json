@@ -6,10 +6,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "main": "node index.js",
-    "debug": "node index.js --verbose",
+    "extract": "node extract.js",
+    "debug": "node extract.js --verbose",
     "bundle": "node scripts/create-bundle.js",
-    "summer": "node summer.js"
+    "analyze": "node analyze.js"
   },
   "keywords": [],
   "author": "",
