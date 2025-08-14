@@ -9,6 +9,7 @@ export const API_CONFIG = {
     RETRY_DELAY_MS: 15000,
     MAX_RETRY_SECONDS: 120,
     REQUEST_INTERVAL_MS: 2000,
+    RATE_LIMIT_WAIT_MS: 60000, // 60 segundos de espera para el error 429
 };
 
 export const CONSOLE_COLORS = {

@@ -1,5 +1,5 @@
 // utils/dataProcessor.js
-import { parse, isValid } from 'date-fns';
+import { parse, isValid, getYear, startOfDay, isWithinInterval } from 'date-fns';
 
 const toTitleCase = (texto) => {
   if (!texto) return '';
@@ -47,17 +47,21 @@ const getAstronomicalSeason = (date) => {
 };
 
 export function normalizarDatos(datosBrutos) {
-  return datosBrutos.map(r => ({
-    fecha: r.fecha,
-    estacion: getAstronomicalSeason(parse(r.fecha, 'yyyy-MM-dd', new Date())),
-    indicativo: r.indicativo,
-    nombre: toTitleCase(r.nombre),
-    tmed: toNumber(r.tmed),
-    prec: toNumber(r.prec),
-    tmin: toNumber(r.tmin),
-    tmax: toNumber(r.tmax),
-    velmedia: toNumber(r.velmedia),
-    racha: toNumber(r.racha),
-  }))
+  return datosBrutos.map(r => {
+    const date = parse(r.fecha, 'yyyy-MM-dd', new Date());
+    return {
+      date,
+      fecha: r.fecha,
+      estacion: getAstronomicalSeason(date),
+      indicativo: r.indicativo,
+      nombre: toTitleCase(r.nombre),
+      tmed: toNumber(r.tmed),
+      prec: toNumber(r.prec),
+      tmin: toNumber(r.tmin),
+      tmax: toNumber(r.tmax),
+      velmedia: toNumber(r.velmedia),
+      racha: toNumber(r.racha),
+    };
+  })
   .filter(r => isValid(r.date));
 }
