@@ -72,7 +72,7 @@ export function presentSummerResults(results, stationId) {
 
   console.log('\n--- 🥵 Anatomía de las Olas de Calor por Año ---');
   console.log(createFormattedTable(results.analisisAnual.olasDeCalor,
-    { frecuencia: { type: 'gradient', decimals: 0 }, duracion_media_dias: { type: 'gradient', decimals: 0 }, intensidad_media_tmax: { type: 'gradient', decimals: 1 } },
+    { frecuencia: { type: 'gradient', decimals: 0 }, duracion_media_dias: { type: 'gradient', decimals: 0 }, intensidad_media_tmax: { type: 'gradient', decimals: 1 }, intensidad_media_tmed: { type: 'gradient', decimals: 1 } },
     { center: true }
   ));
   writeCsv(path.join(analysisDir, `olas_calor_${stationId}.csv`), results.analisisAnual.olasDeCalor);
@@ -123,7 +123,7 @@ export function presentSummerResults(results, stationId) {
 
   console.log('\n--- 🥵 Anatomía de las Olas de Calor (Promedio por Década) ---');
   console.log(createFormattedTable(results.analisisDecadas.olasDeCalor,
-    { frecuencia_total: { type: 'gradient', decimals: 0 }, frecuencia_promedio_anual: { type: 'gradient', decimals: 1 }, duracion_media_dias: { type: 'gradient', decimals: 1 }, intensidad_media_tmax: { type: 'gradient', decimals: 1 } },
+    { frecuencia_total: { type: 'gradient', decimals: 0 }, frecuencia_promedio_anual: { type: 'gradient', decimals: 1 }, duracion_media_dias: { type: 'gradient', decimals: 1 }, intensidad_media_tmax: { type: 'gradient', decimals: 1 }, intensidad_media_tmed: { type: 'gradient', decimals: 1 } },
     { center: true }
   ));
   writeCsv(path.join(analysisDir, `decadas_olas_calor_${stationId}.csv`), results.analisisDecadas.olasDeCalor);

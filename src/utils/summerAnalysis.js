@@ -86,6 +86,7 @@ export function analyzeSummerData(allRecords) {
     frecuencia_promedio_anual: robustMean(values, 'frecuencia'),
     duracion_media_dias: robustMean(values, 'duracion_media_dias'),
     intensidad_media_tmax: robustMean(values, 'intensidad_media_tmax'),
+    intensidad_media_tmed: robustMean(values, 'intensidad_media_tmed'),
   })).value();
 
   const diasSuperadosDecadasTotales = _.chain(diasSuperadosAnual)

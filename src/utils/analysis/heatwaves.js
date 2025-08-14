@@ -71,12 +71,14 @@ export function calculateHeatwaveMetrics(summerRecords) {
     if (yearWaves.length > 0) {
       const totalDays = _.sumBy(yearWaves, 'length');
       const totalTmax = _.sumBy(yearWaves, wave => _.sumBy(wave, 'tmax'));
+      const totalTmed = _.sumBy(yearWaves, wave => _.sumBy(wave, 'tmed'));
       
       results.push({
         'año': year,
         'frecuencia': yearWaves.length,
         'duracion_media_dias': Math.round(_.meanBy(yearWaves, 'length')),
         'intensidad_media_tmax': totalTmax / totalDays,
+        'intensidad_media_tmed': totalTmed / totalDays,
       });
     } else {
       results.push({
@@ -84,6 +86,7 @@ export function calculateHeatwaveMetrics(summerRecords) {
         'frecuencia': 0,
         'duracion_media_dias': 0,
         'intensidad_media_tmax': 0,
+        'intensidad_media_tmed': 0,
       });
     }
   }
