@@ -111,7 +111,7 @@ export function analyzeSummerData(allRecords) {
     analisisDecadas: {
       desviaciones: desviacionesDecadas,
       diasSuperados: diasSuperadosDecadas,
-      diasSuperadosTotales,
+      diasSuperadosTotales: diasSuperadosDecadasTotales,
       umbrales: umbralesDecadas,
       duracionVerano: duracionVeranoDecadas,
       olasDeCalor: olasCalorDecadas,
