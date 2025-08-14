@@ -53,3 +53,6 @@ bundle.txt
 
 # Fichero de entorno
 .env
+
+# Resultados de los análisis
+analisis/

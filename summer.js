@@ -187,7 +187,7 @@ const analizarVerano = (filePath) => {
       writeCsv(path.join(analysisDir, `dias_superados_${estacionId}.csv`), diasSuperados);
       
       // 5. Guardar el fichero original de promedios de verano por año
-      writeCsv(path.join(process.cwd(), `datos_verano_${estacionId}.csv`), promediosAnuales);
+      writeCsv(path.join(analysisDir, `datos_verano_${estacionId}.csv`), promediosAnuales);
 
       console.log('\n🎉 Análisis de verano completado.');
     });
