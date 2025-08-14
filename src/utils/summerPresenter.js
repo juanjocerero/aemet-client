@@ -107,6 +107,13 @@ export function presentSummerResults(results, stationId) {
   writeCsv(path.join(analysisDir, `decadas_noches_tropicales_${stationId}.csv`), results.analisisDecadas.umbrales.map(r => ({ decada: r.decada, noches_tropicales_promedio: r.noches_tropicales_promedio })));
   writeCsv(path.join(analysisDir, `decadas_calor_extremo_${stationId}.csv`), results.analisisDecadas.umbrales.map(r => ({ decada: r.decada, dias_de_horno_40c_promedio: r.dias_de_horno_40c_promedio })));
 
+  console.log('\n--- 🌡️ Total de Noches Tropicales y Días de Horno (por Década) ---');
+  console.log(createFormattedTable(results.analisisDecadas.umbralesTotales,
+    { noches_tropicales_total: { type: 'gradient', decimals: 0 }, dias_de_horno_40c_total: { type: 'gradient', decimals: 0 } },
+    { center: true }
+  ));
+  writeCsv(path.join(analysisDir, `decadas_umbrales_totales_${stationId}.csv`), results.analisisDecadas.umbralesTotales);
+
   console.log('\n--- ☀️ Duración Media del Verano Meteorológico (por Década) ---');
   console.log(createFormattedTable(results.analisisDecadas.duracionVerano,
     { duracion_media_dias: { type: 'gradient', decimals: 0 } },

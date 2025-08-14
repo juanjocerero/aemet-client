@@ -97,6 +97,14 @@ export function analyzeSummerData(allRecords) {
       dias_tmin_superada_total: _.sumBy(values, 'dias_tmin_superada'),
     })).value();
 
+  const umbralesDecadasTotales = _.chain(umbralesAnual)
+    .groupBy(d => getDecade(d.año))
+    .map((values, key) => ({
+      decada: key,
+      noches_tropicales_total: _.sumBy(values, 'noches_tropicales'),
+      dias_de_horno_40c_total: _.sumBy(values, 'dias_de_horno_40c'),
+    })).value();
+
   // --- 5. Construir y devolver el objeto de resultados (SSoT) ---
   return {
     promediosPeriodo: [promediosPeriodo],
@@ -113,6 +121,7 @@ export function analyzeSummerData(allRecords) {
       diasSuperados: diasSuperadosDecadas,
       diasSuperadosTotales: diasSuperadosDecadasTotales,
       umbrales: umbralesDecadas,
+      umbralesTotales: umbralesDecadasTotales,
       duracionVerano: duracionVeranoDecadas,
       olasDeCalor: olasCalorDecadas,
     },
