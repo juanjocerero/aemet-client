@@ -102,7 +102,7 @@ export async function procesarEstacion(estacionId, fechaInicio, fechaFin) {
     await guardarAnalisisEnCSV(resultadosMensuales, nombreFicheroMensual, columnasAnalisis, castAnalisis);
     const resultadosAnuales = analizadorAnual.getResults();
     const nombreFicheroAnual = path.join(nombreDirectorio, `anuales_${estacionId}_${fInicioFmt}_${fFinFmt}.csv`);
-    await guardarAnalisisEnCSV(resultadosAnuales, nombreFicheroAnual, columnasAnuales, castAnalisis);
+    await guardarAnalisisEnCSV(resultadosAnuales, nombreFicheroAnual, columnasAnalisis, castAnalisis);
     logger.succeed('Ficheros de análisis generados.');
   } else {
     logger.warn(`La operación para ${estacionId} finalizó sin obtener datos.`);
