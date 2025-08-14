@@ -88,6 +88,15 @@ export function analyzeSummerData(allRecords) {
     intensidad_media_tmax: robustMean(values, 'intensidad_media_tmax'),
   })).value();
 
+  const diasSuperadosDecadasTotales = _.chain(diasSuperadosAnual)
+    .groupBy(d => getDecade(d.año))
+    .map((values, key) => ({
+      decada: key,
+      dias_tmed_superada_total: _.sumBy(values, 'dias_tmed_superada'),
+      dias_tmax_superada_total: _.sumBy(values, 'dias_tmax_superada'),
+      dias_tmin_superada_total: _.sumBy(values, 'dias_tmin_superada'),
+    })).value();
+
   // --- 5. Construir y devolver el objeto de resultados (SSoT) ---
   return {
     promediosPeriodo: [promediosPeriodo],
@@ -102,6 +111,7 @@ export function analyzeSummerData(allRecords) {
     analisisDecadas: {
       desviaciones: desviacionesDecadas,
       diasSuperados: diasSuperadosDecadas,
+      diasSuperadosTotales,
       umbrales: umbralesDecadas,
       duracionVerano: duracionVeranoDecadas,
       olasDeCalor: olasCalorDecadas,

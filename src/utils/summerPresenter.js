@@ -90,7 +90,14 @@ export function presentSummerResults(results, stationId) {
     { dias_tmed_superada_promedio: { type: 'gradient', decimals: 1 }, dias_tmax_superada_promedio: { type: 'gradient', decimals: 1 }, dias_tmin_superada_promedio: { type: 'gradient', decimals: 1 } },
     { center: true }
   ));
-  writeCsv(path.join(analysisDir, `decadas_dias_superados_${stationId}.csv`), results.analisisDecadas.diasSuperados);
+  writeCsv(path.join(analysisDir, `decadas_dias_superados_${stationId}_promedio.csv`), results.analisisDecadas.diasSuperados);
+
+  console.log('\n--- 🔥 Total de Días/Año Superando la Media (por Década) ---');
+  console.log(createFormattedTable(results.analisisDecadas.diasSuperadosTotales,
+    { dias_tmed_superada_total: { type: 'gradient', decimals: 0 }, dias_tmax_superada_total: { type: 'gradient', decimals: 0 }, dias_tmin_superada_total: { type: 'gradient', decimals: 0 } },
+    { center: true }
+  ));
+  writeCsv(path.join(analysisDir, `decadas_dias_superados_${stationId}_total.csv`), results.analisisDecadas.diasSuperadosTotales);
 
   console.log('\n--- 🌡️ Promedio de Noches Tropicales y Días de Horno (por Década) ---');
   console.log(createFormattedTable(results.analisisDecadas.umbrales,

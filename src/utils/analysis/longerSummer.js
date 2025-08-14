@@ -4,10 +4,10 @@
  * Responsabilidad: Calcular la duración del "verano meteorológico" para cada año
  * basándose en una media móvil de temperatura.
  */
-import { getYear, differenceInDays, parseISO } from 'date-fns';
+import { getYear, differenceInDays } from 'date-fns';
 import _ from 'lodash-es';
 
-const TEMPERATURE_THRESHOLD = 30; // Umbral de temperatura para considerar un día "de verano"
+const TEMPERATURE_THRESHOLD = 22; // Umbral de temperatura para considerar un día "de verano"
 const MOVING_AVERAGE_WINDOW = 7;  // Días para la media móvil
 
 /**
