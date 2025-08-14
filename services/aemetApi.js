@@ -30,7 +30,10 @@ export async function obtenerDatosParaRango(fechaIniStr, fechaFinStr, estacionId
       }
       
       if (resInicial.status === 429) {
-        throw new Error(`Rate limiting (429)`);
+        const espera = API_CONFIG.RATE_LIMIT_WAIT_MS / 1000; // a segundos
+        logger.setWarning(`Rate limit (429) alcanzado. Esperando ${espera}s antes de reintentar...`);
+        await sleep(API_CONFIG.RATE_LIMIT_WAIT_MS);
+        continue; // Salta al siguiente intento del bucle
       }
       if (!resInicial.ok) {
         const errorBody = await resInicial.text();
