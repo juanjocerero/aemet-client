@@ -60,8 +60,7 @@ export function presentSummerResults(results, stationId) {
     { noches_tropicales: { type: 'gradient', decimals: 0 }, "dias_de_horno_40c": { type: 'gradient', decimals: 0 } },
     { center: true }
   ));
-  writeCsv(path.join(analysisDir, `noches_tropicales_${stationId}.csv`), results.analisisAnual.umbrales.map(r => ({ año: r.año, noches_tropicales: r.noches_tropicales })));
-  writeCsv(path.join(analysisDir, `calor_extremo_${stationId}.csv`), results.analisisAnual.umbrales.map(r => ({ año: r.año, dias_de_horno_40c: r.dias_de_horno_40c })));
+  writeCsv(path.join(analysisDir, `umbrales_anual_${stationId}.csv`), results.analisisAnual.umbrales);
 
   console.log('\n--- ☀️ Duración del Verano Meteorológico por Año ---');
   console.log(createFormattedTable(results.analisisAnual.duracionVerano,
@@ -76,6 +75,26 @@ export function presentSummerResults(results, stationId) {
     { center: true }
   ));
   writeCsv(path.join(analysisDir, `olas_calor_${stationId}.csv`), results.analisisAnual.olasDeCalor);
+
+  // --- Tabla de Resumen Anual ---
+  console.log('\n--- 📋 Resumen Anual de Temperaturas ---');
+  // La propiedad 'año' ya viene correctamente desde el análisis
+  const resumenAnualData = results.analisisAnual.promedios;
+
+  console.log(createFormattedTable(
+    resumenAnualData,
+    {
+      'avg_tmax': { type: 'gradient', decimals: 1 },
+      'avg_tmed': { type: 'gradient', decimals: 1 },
+      'avg_tmin': { type: 'gradient', decimals: 1 },
+      'max_tmax': { type: 'gradient', decimals: 1 },
+      'max_tmed': { type: 'gradient', decimals: 1 },
+      'max_tmin': { type: 'gradient', decimals: 1 },
+    },
+    { center: true }
+  ));
+  writeCsv(path.join(analysisDir, `resumen_temperaturas_${stationId}.csv`), resumenAnualData);
+
 
   // --- Análisis por Décadas ---
   console.log('\n--- 📈 Desviación Media por Década vs. Media del Período ---');
@@ -127,9 +146,6 @@ export function presentSummerResults(results, stationId) {
     { center: true }
   ));
   writeCsv(path.join(analysisDir, `decadas_olas_calor_${stationId}.csv`), results.analisisDecadas.olasDeCalor);
-
-  // --- Guardado del fichero de promedios anuales original ---
-  writeCsv(path.join(analysisDir, `datos_verano_${stationId}.csv`), results.analisisAnual.promedios);
 
   console.log('\n🎉 Análisis de verano completado.');
 }

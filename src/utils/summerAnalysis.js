@@ -62,7 +62,21 @@ export function analyzeSummerData(allRecords) {
     const avgYearTmax = robustMean(yearRecords, 'tmax');
     const avgYearTmin = robustMean(yearRecords, 'tmin');
 
-    promediosAnuales.push({ 'Año': parseInt(year), 'Temperatura Media Verano (°C)': avgYearTmed.toFixed(2), 'Temperatura Mínima Verano (°C)': avgYearTmin.toFixed(2), 'Temperatura Máxima Verano (°C)': avgYearTmax.toFixed(2) });
+    // Añadimos también los máximos para la tabla resumen
+    const maxYearTmed = _.maxBy(yearRecords, 'tmed')?.tmed ?? null;
+    const maxYearTmax = _.maxBy(yearRecords, 'tmax')?.tmax ?? null;
+    const maxYearTmin = _.maxBy(yearRecords, 'tmin')?.tmin ?? null;
+
+    promediosAnuales.push({
+      año: parseInt(year),
+      avg_tmed: avgYearTmed,
+      avg_tmax: avgYearTmax,
+      avg_tmin: avgYearTmin,
+      max_tmed: maxYearTmed,
+      max_tmax: maxYearTmax,
+      max_tmin: maxYearTmin,
+    });
+
     desviacionesAnual.push({ 'año': year, 'desv_tmed': (avgYearTmed - avgPeriodoTmed).toFixed(2), 'desv_tmax': (avgYearTmax - avgPeriodoTmax).toFixed(2), 'desv_tmin': (avgYearTmin - avgPeriodoTmin).toFixed(2) });
     diasSuperadosAnual.push({ 'año': year, 'dias_tmed_superada': yearRecords.filter(r => r.tmed > avgPeriodoTmed).length, 'dias_tmax_superada': yearRecords.filter(r => r.tmax > avgPeriodoTmax).length, 'dias_tmin_superada': yearRecords.filter(r => r.tmin > avgPeriodoTmin).length });
     
