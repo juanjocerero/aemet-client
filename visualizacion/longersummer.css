@@ -1,0 +1,104 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    color: #202020;
+}
+
+#visualization-container {
+    position: relative;
+}
+
+#sticky-container {
+    position: sticky;
+    top: 5em;
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+    z-index: 1;
+    background-color: #fff;
+    padding: 2em 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#decade-averages-container {
+    margin-bottom: 1em;
+}
+
+.decade-average-bar {
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+#scroll-spacer {
+    height: 2000vh;
+}
+
+#year-info {
+    text-align: center;
+    margin: 2em 0;
+    padding: 2em 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#year-info .year {
+    font-size: 1.8em;
+    font-weight: 300;
+    padding-top: .5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+#year-info .details {
+    font-size: 1em;
+    display: block;
+}
+
+#year-info .details .detail-days {
+    font-weight: bold;
+}
+
+.day-track {
+    display: flex;
+    width: 100%;
+    height: 30px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.month-labels-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.month-label {
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: bold;
+}
+
+.day-marker {
+    flex-grow: 1;
+    height: 100%;
+    position: relative;
+}
+
+.day-marker.month-tick::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+}

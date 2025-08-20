@@ -1,5 +1,18 @@
 // utils/dataProcessor.js
-import { parse, isValid, getYear, startOfDay, isWithinInterval } from 'date-fns';
+import { parse as parseDate, isValid, getYear, startOfDay, isWithinInterval } from 'date-fns';
+import fs from 'fs';
+import path from 'path';
+
+import { parse as parseCsv } from 'csv-parse/sync';
+
+export function readData(filePath) {
+  const fileContent = fs.readFileSync(filePath, 'utf-8');
+  const records = parseCsv(fileContent, {
+    columns: true,
+    skip_empty_lines: true
+  });
+  return records;
+}
 
 const toTitleCase = (texto) => {
   if (!texto) return '';
@@ -48,7 +61,7 @@ const getAstronomicalSeason = (date) => {
 
 export function normalizarDatos(datosBrutos) {
   return datosBrutos.map(r => {
-    const date = parse(r.fecha, 'yyyy-MM-dd', new Date());
+    const date = parseDate(r.fecha, 'yyyy-MM-dd', new Date());
     return {
       date,
       fecha: r.fecha,

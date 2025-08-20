@@ -4,7 +4,7 @@
  * Responsabilidad: Calcular la duración del "verano meteorológico" para cada año
  * basándose en una media móvil de temperatura.
  */
-import { getYear, differenceInDays } from 'date-fns';
+import { getYear, differenceInDays, format } from 'date-fns';
 import _ from 'lodash-es';
 
 const TEMPERATURE_THRESHOLD = 22; // Umbral de temperatura para considerar un día "de verano"
@@ -17,7 +17,7 @@ const MOVING_AVERAGE_WINDOW = 7;  // Días para la media móvil
  */
 export function calculateLongerSummer(allRecords) {
   const results = [];
-  const recordsByYear = _.groupBy(allRecords, r => getYear(r.fecha_js));
+  const recordsByYear = _.groupBy(allRecords, r => getYear(r.date));
 
   for (const year in recordsByYear) {
     const yearRecords = recordsByYear[year];
@@ -29,7 +29,7 @@ export function calculateLongerSummer(allRecords) {
       const window = yearRecords.slice(i, i + MOVING_AVERAGE_WINDOW);
       const mean = _.meanBy(window.filter(r => r.tmed !== null), 'tmed');
       movingAverages.push({ 
-        date: window[MOVING_AVERAGE_WINDOW - 1].fecha_js, // Fecha del último día de la ventana
+        date: window[MOVING_AVERAGE_WINDOW - 1].date, // Fecha del último día de la ventana
         avg: mean 
       });
     }
@@ -46,6 +46,8 @@ export function calculateLongerSummer(allRecords) {
 
     results.push({
       'año': year,
+      'fecha_inicio': format(firstSummerDay, 'yyyy-MM-dd'),
+      'fecha_fin': format(lastSummerDay, 'yyyy-MM-dd'),
       'duracion_verano_dias': duration,
     });
   }

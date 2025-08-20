@@ -1,0 +1,326 @@
+[
+  {
+    "año": "1972",
+    "fecha_inicio": "1972-07-08",
+    "fecha_fin": "1972-08-29",
+    "duracion_verano_dias": 53
+  },
+  {
+    "año": "1973",
+    "fecha_inicio": "1973-06-20",
+    "fecha_fin": "1973-09-20",
+    "duracion_verano_dias": 93
+  },
+  {
+    "año": "1974",
+    "fecha_inicio": "1974-06-07",
+    "fecha_fin": "1974-09-17",
+    "duracion_verano_dias": 103
+  },
+  {
+    "año": "1975",
+    "fecha_inicio": "1975-06-29",
+    "fecha_fin": "1975-08-27",
+    "duracion_verano_dias": 60
+  },
+  {
+    "año": "1976",
+    "fecha_inicio": "1976-06-16",
+    "fecha_fin": "1976-08-25",
+    "duracion_verano_dias": 71
+  },
+  {
+    "año": "1977",
+    "fecha_inicio": "1977-07-19",
+    "fecha_fin": "1977-09-16",
+    "duracion_verano_dias": 60
+  },
+  {
+    "año": "1978",
+    "fecha_inicio": "1978-07-07",
+    "fecha_fin": "1978-09-25",
+    "duracion_verano_dias": 81
+  },
+  {
+    "año": "1979",
+    "fecha_inicio": "1979-06-21",
+    "fecha_fin": "1979-09-14",
+    "duracion_verano_dias": 86
+  },
+  {
+    "año": "1980",
+    "fecha_inicio": "1980-06-06",
+    "fecha_fin": "1980-09-20",
+    "duracion_verano_dias": 107
+  },
+  {
+    "año": "1981",
+    "fecha_inicio": "1981-06-10",
+    "fecha_fin": "1981-09-20",
+    "duracion_verano_dias": 103
+  },
+  {
+    "año": "1982",
+    "fecha_inicio": "1982-06-08",
+    "fecha_fin": "1982-09-13",
+    "duracion_verano_dias": 98
+  },
+  {
+    "año": "1983",
+    "fecha_inicio": "1983-06-08",
+    "fecha_fin": "1983-09-30",
+    "duracion_verano_dias": 115
+  },
+  {
+    "año": "1984",
+    "fecha_inicio": "1984-06-24",
+    "fecha_fin": "1984-09-18",
+    "duracion_verano_dias": 87
+  },
+  {
+    "año": "1985",
+    "fecha_inicio": "1985-06-15",
+    "fecha_fin": "1985-09-21",
+    "duracion_verano_dias": 99
+  },
+  {
+    "año": "1986",
+    "fecha_inicio": "1986-05-23",
+    "fecha_fin": "1986-09-26",
+    "duracion_verano_dias": 127
+  },
+  {
+    "año": "1987",
+    "fecha_inicio": "1987-06-05",
+    "fecha_fin": "1987-09-22",
+    "duracion_verano_dias": 110
+  },
+  {
+    "año": "1988",
+    "fecha_inicio": "1988-06-05",
+    "fecha_fin": "1988-09-16",
+    "duracion_verano_dias": 104
+  },
+  {
+    "año": "1989",
+    "fecha_inicio": "1989-06-15",
+    "fecha_fin": "1989-09-05",
+    "duracion_verano_dias": 83
+  },
+  {
+    "año": "1990",
+    "fecha_inicio": "1990-06-24",
+    "fecha_fin": "1990-10-03",
+    "duracion_verano_dias": 102
+  },
+  {
+    "año": "1991",
+    "fecha_inicio": "1991-06-12",
+    "fecha_fin": "1991-09-26",
+    "duracion_verano_dias": 107
+  },
+  {
+    "año": "1992",
+    "fecha_inicio": "1992-07-02",
+    "fecha_fin": "1992-09-22",
+    "duracion_verano_dias": 83
+  },
+  {
+    "año": "1993",
+    "fecha_inicio": "1993-06-17",
+    "fecha_fin": "1993-09-08",
+    "duracion_verano_dias": 84
+  },
+  {
+    "año": "1994",
+    "fecha_inicio": "1994-05-31",
+    "fecha_fin": "1994-09-13",
+    "duracion_verano_dias": 106
+  },
+  {
+    "año": "1995",
+    "fecha_inicio": "1995-06-05",
+    "fecha_fin": "1995-09-07",
+    "duracion_verano_dias": 95
+  },
+  {
+    "año": "1996",
+    "fecha_inicio": "1996-05-31",
+    "fecha_fin": "1996-09-02",
+    "duracion_verano_dias": 95
+  },
+  {
+    "año": "1997",
+    "fecha_inicio": "1997-06-12",
+    "fecha_fin": "1997-09-23",
+    "duracion_verano_dias": 104
+  },
+  {
+    "año": "1998",
+    "fecha_inicio": "1998-06-13",
+    "fecha_fin": "1998-09-15",
+    "duracion_verano_dias": 95
+  },
+  {
+    "año": "1999",
+    "fecha_inicio": "1999-05-13",
+    "fecha_fin": "1999-09-15",
+    "duracion_verano_dias": 126
+  },
+  {
+    "año": "2000",
+    "fecha_inicio": "2000-06-01",
+    "fecha_fin": "2000-09-19",
+    "duracion_verano_dias": 111
+  },
+  {
+    "año": "2001",
+    "fecha_inicio": "2001-05-29",
+    "fecha_fin": "2001-09-19",
+    "duracion_verano_dias": 114
+  },
+  {
+    "año": "2002",
+    "fecha_inicio": "2002-06-03",
+    "fecha_fin": "2002-08-26",
+    "duracion_verano_dias": 85
+  },
+  {
+    "año": "2003",
+    "fecha_inicio": "2003-06-06",
+    "fecha_fin": "2003-09-17",
+    "duracion_verano_dias": 104
+  },
+  {
+    "año": "2004",
+    "fecha_inicio": "2004-06-03",
+    "fecha_fin": "2004-09-25",
+    "duracion_verano_dias": 115
+  },
+  {
+    "año": "2005",
+    "fecha_inicio": "2005-06-06",
+    "fecha_fin": "2005-09-09",
+    "duracion_verano_dias": 96
+  },
+  {
+    "año": "2006",
+    "fecha_inicio": "2006-05-16",
+    "fecha_fin": "2006-09-14",
+    "duracion_verano_dias": 122
+  },
+  {
+    "año": "2007",
+    "fecha_inicio": "2007-06-27",
+    "fecha_fin": "2007-09-13",
+    "duracion_verano_dias": 79
+  },
+  {
+    "año": "2008",
+    "fecha_inicio": "2008-06-19",
+    "fecha_fin": "2008-09-05",
+    "duracion_verano_dias": 79
+  },
+  {
+    "año": "2009",
+    "fecha_inicio": "2009-06-14",
+    "fecha_fin": "2009-09-13",
+    "duracion_verano_dias": 92
+  },
+  {
+    "año": "2010",
+    "fecha_inicio": "2010-06-04",
+    "fecha_fin": "2010-09-17",
+    "duracion_verano_dias": 106
+  },
+  {
+    "año": "2011",
+    "fecha_inicio": "2011-06-15",
+    "fecha_fin": "2011-10-03",
+    "duracion_verano_dias": 111
+  },
+  {
+    "año": "2012",
+    "fecha_inicio": "2012-05-14",
+    "fecha_fin": "2012-09-12",
+    "duracion_verano_dias": 122
+  },
+  {
+    "año": "2013",
+    "fecha_inicio": "2013-06-15",
+    "fecha_fin": "2013-09-28",
+    "duracion_verano_dias": 106
+  },
+  {
+    "año": "2014",
+    "fecha_inicio": "2014-05-11",
+    "fecha_fin": "2014-09-17",
+    "duracion_verano_dias": 130
+  },
+  {
+    "año": "2015",
+    "fecha_inicio": "2015-05-14",
+    "fecha_fin": "2015-09-13",
+    "duracion_verano_dias": 123
+  },
+  {
+    "año": "2016",
+    "fecha_inicio": "2016-06-07",
+    "fecha_fin": "2016-09-29",
+    "duracion_verano_dias": 115
+  },
+  {
+    "año": "2017",
+    "fecha_inicio": "2017-05-24",
+    "fecha_fin": "2017-10-08",
+    "duracion_verano_dias": 138
+  },
+  {
+    "año": "2018",
+    "fecha_inicio": "2018-06-17",
+    "fecha_fin": "2018-10-01",
+    "duracion_verano_dias": 107
+  },
+  {
+    "año": "2019",
+    "fecha_inicio": "2019-06-02",
+    "fecha_fin": "2019-09-22",
+    "duracion_verano_dias": 113
+  },
+  {
+    "año": "2020",
+    "fecha_inicio": "2020-05-25",
+    "fecha_fin": "2020-09-21",
+    "duracion_verano_dias": 120
+  },
+  {
+    "año": "2021",
+    "fecha_inicio": "2021-06-03",
+    "fecha_fin": "2021-09-18",
+    "duracion_verano_dias": 108
+  },
+  {
+    "año": "2022",
+    "fecha_inicio": "2022-05-19",
+    "fecha_fin": "2022-10-26",
+    "duracion_verano_dias": 161
+  },
+  {
+    "año": "2023",
+    "fecha_inicio": "2023-05-01",
+    "fecha_fin": "2023-10-09",
+    "duracion_verano_dias": 162
+  },
+  {
+    "año": "2024",
+    "fecha_inicio": "2024-05-29",
+    "fecha_fin": "2024-09-21",
+    "duracion_verano_dias": 116
+  },
+  {
+    "año": "2025",
+    "fecha_inicio": "2025-05-30",
+    "fecha_fin": "2025-08-15",
+    "duracion_verano_dias": 78
+  }
+]
