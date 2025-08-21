@@ -1,14 +1,8 @@
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    color: #202020;
-}
-
-#visualization-container {
+#longer-summer-visualization-container {
     position: relative;
 }
 
-#sticky-container {
+#longer-summer-sticky-container {
     position: sticky;
     top: 5em;
     width: 80%;
@@ -19,27 +13,27 @@ body {
     border-bottom: 1px solid #e0e0e0;
 }
 
-#decade-averages-container {
+#longer-summer-decade-averages-container {
     margin-bottom: 1em;
 }
 
-.decade-average-bar {
+.longer-summer-decade-average-bar {
     margin-bottom: 1em;
     text-align: center;
 }
 
-#scroll-spacer {
+#longer-summer-scroll-spacer {
     height: 2000vh;
 }
 
-#year-info {
+#longer-summer-year-info {
     text-align: center;
     margin: 2em 0;
     padding: 2em 0;
     border-bottom: 1px solid #e0e0e0;
 }
 
-#year-info .year {
+#longer-summer-year-info .longer-summer-year {
     font-size: 1.8em;
     font-weight: 300;
     padding-top: .5rem;
@@ -47,16 +41,16 @@ body {
     display: block;
 }
 
-#year-info .details {
+#longer-summer-year-info .longer-summer-details {
     font-size: 1em;
     display: block;
 }
 
-#year-info .details .detail-days {
+#longer-summer-year-info .longer-summer-details .longer-summer-detail-days {
     font-weight: bold;
 }
 
-.day-track {
+.longer-summer-day-track {
     display: flex;
     width: 100%;
     height: 30px;
@@ -66,7 +60,7 @@ body {
     position: relative;
 }
 
-.month-labels-container {
+.longer-summer-month-labels-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -75,7 +69,7 @@ body {
     pointer-events: none;
 }
 
-.month-label {
+.longer-summer-month-label {
     position: absolute;
     height: 100%;
     display: flex;
@@ -86,13 +80,13 @@ body {
     font-weight: bold;
 }
 
-.day-marker {
+.longer-summer-day-marker {
     flex-grow: 1;
     height: 100%;
     position: relative;
 }
 
-.day-marker.month-tick::after {
+.longer-summer-day-marker.month-tick::after {
     content: '';
     position: absolute;
     top: 0;
