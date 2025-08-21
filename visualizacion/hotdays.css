@@ -5,15 +5,15 @@
 
 #hot-days-visualization-container {
     position: relative;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: #333;
+    /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; */
+    color: #202020;
 }
 
 #hot-days-sticky-container {
     position: sticky;
     top: 5em;
     width: 90%;
-    max-width: 600px; /* Un poco más estrecho para que la cuadrícula no sea tan ancha */
+    max-width: 800px; /* Un poco más estrecho para que la cuadrícula no sea tan ancha */
     margin: 0 auto;
     z-index: 1;
     padding: 2em 0;
@@ -28,7 +28,7 @@
     font-size: 2.5em;
     font-weight: 200;
     display: block;
-    color: #888;
+    color: #202020;
 }
 
 .hot-days-counter {
@@ -104,6 +104,7 @@
 .day-cell:hover .date-label {
     opacity: 1;
     color: #333;
+    font-size: 0.7em;
 }
 
 .month-label {
