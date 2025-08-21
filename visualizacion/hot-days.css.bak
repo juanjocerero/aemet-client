@@ -35,22 +35,6 @@
     font-size: 1em;
     color: #666;
     margin-top: 0.25em;
-    margin-bottom: 1em; /* Espacio para la barra */
-}
-
-.fever-bar-container {
-    width: 100%;
-    height: 8px;
-    background-color: #e9e9e9;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.fever-bar-inner {
-    width: 0%; /* Empieza vacía */
-    height: 100%;
-    background: linear-gradient(90deg, #FFEDA0 0%, #FF8C00 70%, #C90022 100%);
-    border-radius: 4px;
 }
 
 #hot-days-grid-container {
@@ -78,18 +62,13 @@
     transform: translate(-50%, -50%);
     font-size: 1.2em; /* Ajustar según el tamaño de la celda */
     line-height: 1;
-    /* La animación ahora la gestiona GSAP */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
 }
 
 .day-cell.is-hot .emoji {
     opacity: 1;
 }
-
-/* Colores de fondo para cada mes */
-.day-cell.month-6 { background-color: #FFFACD; } /* Junio */
-.day-cell.month-7 { background-color: #FFE4B5; } /* Julio */
-.day-cell.month-8 { background-color: #FFDDE1; } /* Agosto */
-.day-cell.month-9 { background-color: #F5DEB3; } /* Septiembre */
 
 .date-label {
     position: absolute;
@@ -104,15 +83,6 @@
 .day-cell:hover .date-label {
     opacity: 1;
     color: #333;
-}
-
-.month-label {
-    position: absolute;
-    top: 2px; /* Corregido */
-    left: 3px; /* Corregido */
-    font-size: 0.6em;
-    font-weight: bold;
-    color: #aaa;
 }
 
 #hot-days-scroll-spacer {
