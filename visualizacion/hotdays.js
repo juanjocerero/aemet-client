@@ -43,7 +43,7 @@
       return;
     }
 
-    const DATA_URL = './hot-days.json';
+    const DATA_URL = './hotdays.json';
     async function loadData() {
       try {
         const res = await fetch(DATA_URL + '?t=' + Date.now());
