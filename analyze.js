@@ -4,7 +4,7 @@
  * Responsabilidad: Orquestar el flujo de análisis de datos de verano.
  */
 import path from 'path';
-import { parseClimateData } from './src/utils/summerDataParser.js';
+import { readAndProcessData } from './src/utils/dataLoader.js';
 import { analyzeSummerData } from './src/utils/summerAnalysis.js';
 import { presentSummerResults } from './src/utils/summerPresenter.js';
 
@@ -34,7 +34,7 @@ async function main() {
 🚀 Iniciando el análisis de verano para el fichero: ${fullPath}`);
     
     // 1. Parsear TODOS los datos del fichero
-    const allRecords = await parseClimateData(fullPath);
+    const allRecords = await readAndProcessData(fullPath);
     console.log(`
 🔎 Encontrados ${allRecords.length} registros climáticos en total.`);
 

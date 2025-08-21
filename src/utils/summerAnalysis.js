@@ -20,10 +20,10 @@ const robustMean = (records, column) => {
 
 const filterSummerRecords = (allRecords) => {
   return allRecords.filter(record => {
-    const year = getYear(record.fecha_js);
+    const year = getYear(record.date);
     const summerStart = startOfDay(new Date(year, 5, 21));
     const autumnStart = startOfDay(new Date(year, 8, 22));
-    return isWithinInterval(record.fecha_js, { start: summerStart, end: autumnStart });
+    return isWithinInterval(record.date, { start: summerStart, end: autumnStart });
   });
 };
 
@@ -43,14 +43,14 @@ export function analyzeSummerData(allRecords) {
   const avgPeriodoTmax = robustMean(summerRecords, 'tmax');
   const avgPeriodoTmin = robustMean(summerRecords, 'tmin');
   const promediosPeriodo = {
-    periodo: `Veranos ${getYear(summerRecords[0].fecha_js)}-${getYear(summerRecords[summerRecords.length - 1].fecha_js)}`,
+    periodo: `Veranos ${getYear(summerRecords[0].date)}-${getYear(summerRecords[summerRecords.length - 1].date)}`,
     promedio_tmed: avgPeriodoTmed.toFixed(2),
     promedio_tmax: avgPeriodoTmax.toFixed(2),
     promedio_tmin: avgPeriodoTmin.toFixed(2),
   };
 
   // --- 2. Análisis Anuales (sobre datos de verano) ---
-  const summerByYear = _.groupBy(summerRecords, record => getYear(record.fecha_js));
+  const summerByYear = _.groupBy(summerRecords, record => getYear(record.date));
   const promediosAnuales = [];
   const desviacionesAnual = [];
   const diasSuperadosAnual = [];
