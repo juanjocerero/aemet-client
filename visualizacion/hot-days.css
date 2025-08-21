@@ -1,0 +1,90 @@
+/**
+ * hot-days.css
+ * Estilos para la visualización de la cuadrícula de días calurosos.
+ */
+
+#hot-days-visualization-container {
+    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+}
+
+#hot-days-sticky-container {
+    position: sticky;
+    top: 5em;
+    width: 90%;
+    max-width: 600px; /* Un poco más estrecho para que la cuadrícula no sea tan ancha */
+    margin: 0 auto;
+    z-index: 1;
+    padding: 2em 0;
+}
+
+#hot-days-year-info {
+    text-align: center;
+    margin-bottom: 1.5em;
+}
+
+#hot-days-year-info .year {
+    font-size: 2.5em;
+    font-weight: 200;
+    display: block;
+    color: #888;
+}
+
+.hot-days-counter {
+    font-size: 1em;
+    color: #666;
+    margin-top: 0.25em;
+}
+
+#hot-days-grid-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 5px;
+    margin: 0 auto;
+    width: 100%;
+    /* Para mantener el aspect ratio de la cuadrícula */
+    aspect-ratio: 12 / 8;
+}
+
+.day-cell {
+    width: 100%;
+    padding-bottom: 100%; /* Truco para mantener el aspect ratio 1:1 */
+    position: relative;
+    background-color: #e9e9e9;
+    border-radius: 3px;
+}
+
+.day-cell .emoji {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2em; /* Ajustar según el tamaño de la celda */
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.day-cell.is-hot .emoji {
+    opacity: 1;
+}
+
+.date-label {
+    position: absolute;
+    bottom: 2px;
+    right: 3px;
+    font-size: 0.5em;
+    color: #aaa;
+    opacity: 0.6;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.day-cell:hover .date-label {
+    opacity: 1;
+    color: #333;
+}
+
+#hot-days-scroll-spacer {
+    height: 2500vh; /* Ajustar para controlar la velocidad del scroll */
+}

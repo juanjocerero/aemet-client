@@ -65,7 +65,6 @@ export function normalizarDatos(datosBrutos) {
     return {
       date,
       fecha: r.fecha,
-      estacion: getAstronomicalSeason(date),
       indicativo: r.indicativo,
       nombre: toTitleCase(r.nombre),
       tmed: toNumber(r.tmed),
@@ -76,5 +75,11 @@ export function normalizarDatos(datosBrutos) {
       racha: toNumber(r.racha),
     };
   })
-  .filter(r => isValid(r.date));
+  .filter(r => isValid(r.date))
+  .map(r => {
+    return {
+      ...r,
+      estacion: getAstronomicalSeason(r.date)
+    }
+  });
 }
