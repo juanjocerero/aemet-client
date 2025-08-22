@@ -38,15 +38,30 @@
     gsap.registerPlugin(ScrollTrigger);
     
     // --- 2. Carga de datos ---
-    const DATA_URL = 'summerevolution.json'; // Asumimos que está en la misma carpeta
+    /* Carga de datos (robusta) */
+    const DATA_URL = 'https://narrativas.ideal.es/temperaturas-verano/summerevolution.json?t=' + Date.now();
+    const FALLBACK_URL = './summerevolution.json';
+
+    async function loadData() {
+      try {
+        const res = await fetch(DATA_URL, { mode: 'cors', credentials: 'omit' });
+        if (!res.ok) throw new Error(res.status);
+        return res.json();
+      } catch (err) {
+        console.warn('❌ Fallo al cargar JSON remoto', err);
+        const res2 = await fetch(FALLBACK_URL);
+        if (!res2.ok) throw new Error(res2.status);
+        return res2.json();
+      }
+    }
+
     let data;
     try {
-      const response = await fetch(DATA_URL + '?t=' + Date.now());
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      data = await response.json();
-    } catch (e) {
-      console.error("No se pudieron cargar los datos de la visualización:", e);
-      document.getElementById('summerevolution-chart').innerHTML = '<p>Error al cargar los datos.</p>';
+      data = await loadData();
+      console.log('✅ JSON cargado', data);
+    } catch (err) {
+      console.error('❌ Ni remoto ni fallback disponible', err);
+      yearInfoContent.textContent = 'No se pudieron cargar los datos.';
       return;
     }
     
