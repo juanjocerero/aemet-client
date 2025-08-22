@@ -71,7 +71,7 @@
         ? { top: 10, right: 30, bottom: 30, left: 40 } 
         : { top: 5, right: 15, bottom: 20, left: 35 };
     const width = container.clientWidth - margin.left - margin.right;
-    const height = 600 - margin.top - margin.bottom;
+    const height = 700 - margin.top - margin.bottom;
     
     const svg = d3.select(container).append('svg')
     .attr('width', width + margin.left + margin.right)
@@ -105,7 +105,7 @@
     
     // Escalas
     const x = d3.scaleLinear().domain([0, 93]).range([0, width]);
-    const y = d3.scaleLinear().domain([data.bounds.min - 2, data.bounds.max + 2]).range([height, 0]);
+    const y = d3.scaleLinear().domain([data.bounds.min, data.bounds.max]).range([height, 0]);
     const tempColor = d3.scaleSequential(d3.interpolateOranges).domain([data.bounds.min, data.bounds.max]);
     
     // Ejes
@@ -428,7 +428,7 @@
       details.append('summary')
         .style('cursor', 'pointer')
         .style('font-weight', 'bold')
-        .text('Leyenda (pulsa para desplegar)');
+        .text('Leyenda (pulsa para desplegar y/u ocultar)');
 
       const legendContainer = details.append('div')
         .attr('class', 'legend-content-wrapper');
