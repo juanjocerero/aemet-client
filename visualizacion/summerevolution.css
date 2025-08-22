@@ -1,0 +1,201 @@
+/**
+ * summerevolution.css
+ * Estilos para la visualización de la evolución de temperaturas de verano.
+ */
+
+:root {
+    --color-text: #333;
+    --color-text-light: #777;
+    --color-grid: #e0e0e0;
+    --color-mean-line: #007acc;
+    --color-bg-cold: rgba(0, 206, 182, 0.1);
+    --color-bg-warm: rgba(252, 195, 79, 0.15);
+    --color-bg-hot: rgba(201, 0, 34, 0.1);
+    --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/*
+ * Modelo de caja robusto y prevención de desbordamiento.
+ * Esto asegura que el componente se comporte de manera predecible
+ * cuando se incrusta en otras páginas.
+ */
+#summerevolution-container,
+#summerevolution-container * {
+    box-sizing: border-box;
+}
+
+#summerevolution-container {
+    position: relative;
+    width: 100%;
+    transition: background-color 0.5s ease-in-out;
+    font-family: var(--font-main);
+    color: var(--color-text);
+}
+
+#summerevolution-sticky-wrapper {
+    position: sticky;
+    top: 2rem;
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+#summerevolution-chart {
+    width: 100%;
+}
+
+#summerevolution-scroll-spacer {
+    height: 3000vh; /* Controla la velocidad del scrollytelling */
+    position: relative;
+    z-index: 0;
+}
+
+/* --- Estilos del Gráfico SVG --- */
+.axis path,
+.axis line {
+    fill: none;
+    stroke: var(--color-grid);
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-size: 0.8em;
+    fill: var(--color-text-light);
+}
+
+.line {
+    fill: none;
+    stroke-width: 1.5px;
+    transition: opacity 0.3s, stroke-width 0.3s;
+}
+
+.line-inactive {
+    opacity: 0.1;
+}
+
+.line-active {
+    stroke-width: 3px;
+    opacity: 1;
+}
+
+.mean-line {
+    stroke: var(--color-mean-line);
+    stroke-width: 2px;
+    stroke-dasharray: 4 2;
+}
+
+/* --- Tooltip / Anotaciones --- */
+#summerevolution-tooltip {
+    width: 90%;
+    max-width: 400px;
+    /* box-sizing: border-box; ya está aplicado globalmente */
+}
+
+.tooltip {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 0.9em;
+    pointer-events: none; /* Para que no interfiera con el hover de las líneas */
+    opacity: 0;
+    transition: opacity 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.tooltip .year {
+    font-weight: bold;
+    font-size: 1.2em;
+    display: block;
+}
+
+.tooltip .temp {
+    font-size: 1em;
+    color: var(--color-text-light);
+}
+
+@media (max-width: 768px) {
+    #summerevolution-tooltip {
+        font-size: 0.8em;
+    }
+}
+
+/* --- Leyenda --- */
+#summerevolution-legend {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #333;
+}
+
+#summerevolution-legend summary {
+    cursor: pointer;
+    font-weight: bold;
+    outline: none;
+    padding: 5px 0;
+}
+
+#summerevolution-legend summary::marker,
+#summerevolution-legend summary::-webkit-details-marker {
+    display: none;
+}
+
+#summerevolution-legend summary:before {
+    content: '►';
+    margin-right: 5px;
+    font-size: 0.9em;
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
+#summerevolution-legend details[open] > summary:before {
+    transform: rotate(90deg);
+}
+
+.legend-content-wrapper {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 5px;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.legend-title {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.legend-symbol-svg {
+    width: 30px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+.legend-symbol-colorbox {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    border: 1px solid #eee;
+}
+
+.legend-symbol-gradient {
+    width: 100%;
+    height: 15px;
+    flex-shrink: 0;
+}
