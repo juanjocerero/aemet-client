@@ -1,0 +1,121 @@
+/* visualizacion/climatestripes.css */
+
+#climate-stripes-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+    background-color: #ffffff;
+}
+
+#climate-stripes-visualization {
+    width: 100%;
+    margin-top: 1rem;
+    /* Contenedor anclado que actúa como viewport */
+    height: calc(100vh - 4rem); /* Altura de la ventana visible */
+    overflow: hidden;
+    position: relative;
+}
+
+.year-stripe-bar {
+    position: relative;
+    width: 100%;
+    height: 32px; /* Altura de cada barra de año */
+    background-color: #e0e0e0; /* Color de fondo gris uniforme */
+    display: flex;
+    align-items: center;
+    overflow: hidden; /* Oculta los ticks que puedan desbordar */
+    margin-bottom: 2px; /* Espacio entre las barras de los años */
+}
+
+.year-label {
+    position: absolute;
+    left: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #202020;
+    text-shadow: 0 0 3px #fff, 0 0 5px #fff; /* Sombra para legibilidad */
+    z-index: 2;
+    opacity: 70%;
+}
+
+.day-ticks-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.day-tick {
+    flex-grow: 1; /* Cada tick ocupa el mismo espacio */
+    height: 100%;
+    /* El color de fondo será establecido por JavaScript */
+}
+
+.month-separator-tick {
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.month-labels-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    pointer-events: none; /* Para no interferir con el tooltip */
+}
+
+.month-label-item {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.4);
+    text-transform: uppercase;
+}
+
+#climate-stripes-tooltip {
+    position: fixed;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    pointer-events: none; /* Para que el ratón no interfiera con el hover de las barras */
+    z-index: 10;
+    white-space: pre-wrap;
+    text-align: center;
+}
+
+#climate-stripes-tooltip .tooltip-year {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+#climate-stripes-tooltip .tooltip-annotation {
+    font-style: italic;
+    margin-top: 8px;
+    border-top: 1px solid #555;
+    padding-top: 8px;
+}
+
+/* Espaciador para el scroll. La altura será definida por JS */
+#climate-stripes-scroll-spacer {
+    width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #climate-stripes-header h1 {
+        font-size: 2rem;
+    }
+    .year-stripe-bar {
+        height: 20px;
+    }
+    .year-label {
+        font-size: 12px;
+    }
+}

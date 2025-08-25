@@ -29,7 +29,7 @@ export function readAndProcessData(filePath) {
         delimiter: ',',
         trim: true,
         cast: (value, context) => {
-          if (['tmed', 'tmin', 'tmax', 'prec', 'velmedia', 'racha'].includes(context.column)) {
+          if (['tmed', 'tmin', 'tmax', 'prec', 'vmed', 'racha'].includes(context.column)) {
             return toNumber(value);
           }
           return value;
