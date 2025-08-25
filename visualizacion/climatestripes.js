@@ -76,7 +76,7 @@
     // --- 4. Escalas y Lógica de la Visualización ---
     function getColorForTemp(tmax) {
         if (tmax === null) return GRAY_COLOR;
-        if (tmax >= 35) return '#c90022';
+        if (tmax >= 35) return '#de092a';
         if (tmax >= 30) return '#fcc34f';
         if (tmax >= 25) return '#fde46f';
         return GRAY_COLOR;
@@ -140,10 +140,33 @@
         patternOverlay.style.maskImage = `linear-gradient(to right, ${maskStops.join(', ')})`;
         patternOverlay.style.WebkitMaskImage = `linear-gradient(to right, ${maskStops.join(', ')})`;
 
+        // Añadir capa para olas de calor
+        const heatwaveOverlay = document.createElement('div');
+        heatwaveOverlay.style.position = 'absolute';
+        heatwaveOverlay.style.top = '0';
+        heatwaveOverlay.style.left = '0';
+        heatwaveOverlay.style.width = '100%';
+        heatwaveOverlay.style.height = '100%';
+        heatwaveOverlay.style.pointerEvents = 'none';
+        heatwaveOverlay.style.backgroundColor = '#c90022';
+        heatwaveOverlay.style.opacity = '0.7';
+        heatwaveOverlay.style.mixBlendMode = 'multiply';
+
+        const heatwaveMaskStops = yearData.days.map((day, i) => {
+            const pos = (i / totalDaysInYear) * 100;
+            const nextPos = ((i + 1) / totalDaysInYear) * 100;
+            const color = day.isHeatwaveDay ? 'black' : 'transparent';
+            return `${color} ${pos}%, ${color} ${nextPos}%`;
+        });
+
+        heatwaveOverlay.style.maskImage = `linear-gradient(to right, ${heatwaveMaskStops.join(', ')})`;
+        heatwaveOverlay.style.WebkitMaskImage = `linear-gradient(to right, ${heatwaveMaskStops.join(', ')})`;
+
         bar.appendChild(yearLabel);
         bar.appendChild(ticksContainer);
         bar.appendChild(monthLabelsContainer);
         bar.appendChild(patternOverlay); // Añadir la capa del patrón
+        bar.appendChild(heatwaveOverlay); // Añadir la capa de olas de calor
         track.appendChild(bar);
         allYearBars.push(bar);
 
