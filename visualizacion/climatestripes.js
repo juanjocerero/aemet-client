@@ -58,18 +58,31 @@
         { name: 'Jul', days: 31 }, { name: 'Ago', days: 31 }, { name: 'Sep', days: 30 },
         { name: 'Oct', days: 31 }, { name: 'Nov', days: 30 }, { name: 'Dic', days: 31 }
     ];
-
-    // --- 3. Carga de datos ---
-    const DATA_URL = './climate-stripes.json';
-
+    
+    /* Carga de datos (robusta) */
+    const DATA_URL = 'https://narrativas.ideal.es/temperaturas-verano/hotdays.json?t=' + Date.now();
+    const FALLBACK_URL = './hotdays.json';
+    
+    async function loadData() {
+      try {
+        const res = await fetch(DATA_URL, { mode: 'cors', credentials: 'omit' });
+        if (!res.ok) throw new Error(res.status);
+        return res.json();
+      } catch (err) {
+        console.warn('❌ Fallo al cargar JSON remoto', err);
+        const res2 = await fetch(FALLBACK_URL);
+        if (!res2.ok) throw new Error(res2.status);
+        return res2.json();
+      }
+    }
+    
     let data;
     try {
-      const response = await fetch(DATA_URL + '?t=' + Date.now());
-      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-      data = await response.json();
-    } catch (error) {
-      console.error('No se pudieron cargar los datos para la visualización.', error);
-      visContainer.innerHTML = '<p style="color: red; text-align: center;">Error al cargar los datos.</p>';
+      data = await loadData();
+      console.log('✅ JSON cargado', data);
+    } catch (err) {
+      console.error('❌ Ni remoto ni fallback disponible', err);
+      yearInfoContent.textContent = 'No se pudieron cargar los datos.';
       return;
     }
 
