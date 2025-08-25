@@ -418,51 +418,6 @@
       
       // Estado inicial
       tooltip.style('opacity', 0);
-      
-      // --- 6. Leyenda ---
-      const legendParent = d3.select('#summerevolution-legend');
-      legendParent.html(''); // Limpiar leyenda anterior
-
-      const details = legendParent.append('details');
-      
-      details.append('summary')
-        .style('cursor', 'pointer')
-        .style('font-weight', 'bold')
-        .text('Leyenda (pulsa para desplegar y/u ocultar)');
-
-      const legendContainer = details.append('div')
-        .attr('class', 'legend-content-wrapper');
-
-      function createLegendItem(html) {
-          const item = legendContainer.append('div')
-              .attr('class', 'legend-item')
-              .style('display', 'flex')
-              .style('align-items', 'center')
-              .style('margin-bottom', '8px');
-          item.html(html);
-      }
-      
-      const legendGradient = d3.range(0, 1, 0.1).map(t => tempColor.interpolator()(t));
-      const symbolStyle = `width: 30px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 10px;`;
-
-      // 5. Rediseño de la leyenda
-      createLegendItem(`<div class="legend-symbol" style="${symbolStyle}"><svg width="30" height="10"><line x1="0" y1="5" x2="30" y2="5" style="stroke:#555; stroke-width:2; stroke-dasharray: 3 3;"></line></svg></div><div class="legend-text">Medias de las décadas actual y previa</div>`);
-      
-      createLegendItem(`<div class="legend-symbol" style="${symbolStyle}"><div class="legend-gradient" style="background: linear-gradient(to right, ${legendGradient.join(',')}); width: 30px; height: 10px;"></div></div><div class="legend-text">Evolución de las temperaturas máximas durante el año</div>`);
-
-      createLegendItem(`<div class="legend-symbol" style="${symbolStyle}"><svg width="30" height="10"><line x1="0" y1="5" x2="30" y2="5" style="stroke:#555; stroke-width:1.5; stroke-dasharray: 4 4;"></line></svg></div><div class="legend-text">Temperaturas máximas del verano promedio 1972-2025</div>`);
-      
-      createLegendItem(`<div class="legend-symbol" style="${symbolStyle}"><div style="width:15px; height:15px; background-color: rgba(217, 83, 79, 0.3); border: 1px solid #d9534f;"></div></div><div class="legend-text">Variación con respecto a la media del período (año más caluroso que la media)</div>`);
-      
-      createLegendItem(`<div class="legend-symbol" style="${symbolStyle}"><div style="width:15px; height:15px; background-color: rgba(0, 206, 182, 0.3); border: 1px solid #00ceb6;"></div></div><div class="legend-text">Variación con respecto a la media del período (año menos caluroso que la media)</div>`);
-      
-      createLegendItem(`<div class="legend-symbol" style="${symbolStyle}"><svg width="12" height="12"><circle cx="6" cy="6" r="5" style="fill: #d9534f;"></circle></svg></div><div class="legend-text">Día más caluroso del verano</div>`);
-      
-      createLegendItem(`<div class="legend-symbol" style="${symbolStyle}"><svg width="12" height="12"><circle cx="6" cy="6" r="5" style="fill: #00ceb6;"></circle></svg></div><div class="legend-text">Día menos caluroso del verano</div>`);
-      
-      function getDayOfYear(date) {
-        return (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
-      }
     }
     
     // --- Lanzador ---
