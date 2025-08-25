@@ -58,10 +58,10 @@
         { name: 'Jul', days: 31 }, { name: 'Ago', days: 31 }, { name: 'Sep', days: 30 },
         { name: 'Oct', days: 31 }, { name: 'Nov', days: 30 }, { name: 'Dic', days: 31 }
     ];
-    
+
     /* Carga de datos (robusta) */
-    const DATA_URL = 'https://narrativas.ideal.es/temperaturas-verano/hotdays.json?t=' + Date.now();
-    const FALLBACK_URL = './hotdays.json';
+    const DATA_URL = 'https://narrativas.ideal.es/temperaturas-verano/climate-stripes.json?t=' + Date.now();
+    const FALLBACK_URL = './climate-stripes.json';
     
     async function loadData() {
       try {
