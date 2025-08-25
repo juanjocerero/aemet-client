@@ -1,0 +1,466 @@
+
+/* visualizacion/climatestripes.css */
+
+#climate-stripes-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+#climate-stripes-visualization {
+    width: 100%;
+    margin-top: 5rem;
+    /* Contenedor anclado que actúa como viewport */
+    height: calc(100vh - 4rem); /* Altura de la ventana visible */
+    overflow: hidden;
+    position: relative;
+}
+
+.year-stripe-bar {
+    position: relative;
+    width: 100%;
+    height: 32px; /* Altura de cada barra de año */
+    background-color: #e0e0e0; /* Color de fondo gris uniforme */
+    display: flex;
+    align-items: center;
+    overflow: hidden; /* Oculta los ticks que puedan desbordar */
+    margin-bottom: 2px; /* Espacio entre las barras de los años */
+}
+
+.year-label {
+    position: absolute;
+    left: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #202020;
+    text-shadow: 0 0 3px #fff, 0 0 5px #fff; /* Sombra para legibilidad */
+    z-index: 2;
+    opacity: 70%;
+}
+
+.day-ticks-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.day-tick {
+    flex-grow: 1; /* Cada tick ocupa el mismo espacio */
+    height: 100%;
+    /* El color de fondo será establecido por JavaScript */
+}
+
+.month-separator-tick {
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.month-labels-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    pointer-events: none; /* Para no interferir con el tooltip */
+}
+
+.month-label-item {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.4);
+    text-transform: uppercase;
+}
+
+#climate-stripes-tooltip {
+    position: fixed;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    pointer-events: none; /* Para que el ratón no interfiera con el hover de las barras */
+    z-index: 10;
+    white-space: pre-wrap;
+    text-align: center;
+}
+
+#climate-stripes-tooltip .tooltip-year {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+#climate-stripes-tooltip .tooltip-annotation {
+    font-style: italic;
+    margin-top: 8px;
+    border-top: 1px solid #555;
+    padding-top: 8px;
+}
+
+/* Espaciador para el scroll. La altura será definida por JS */
+#climate-stripes-scroll-spacer {
+    width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #climate-stripes-header h1 {
+        font-size: 2rem;
+    }
+    .year-stripe-bar {
+        height: 20px;
+    }
+    .year-label {
+        font-size: 12px;
+    }
+}
+
+/**
+ * hot-days.css
+ * Estilos para la visualización de la cuadrícula de días calurosos.
+ */
+
+#hot-days-visualization-container {
+    position: relative;
+    /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; */
+    color: #202020;
+}
+
+#hot-days-sticky-container {
+    position: sticky;
+    top: 5em;
+    width: 90%;
+    max-width: 800px; /* Un poco más estrecho para que la cuadrícula no sea tan ancha */
+    margin: 0 auto;
+    z-index: 1;
+    padding: 2em 0;
+}
+
+#hot-days-year-info {
+    text-align: center;
+    margin-bottom: 1.5em;
+}
+
+#hot-days-year-info .year {
+    font-size: 2.5em;
+    font-weight: 200;
+    display: block;
+    color: #202020;
+}
+
+.hot-days-counter {
+    font-size: 1em;
+    color: #666;
+    margin-top: 0.25em;
+    margin-bottom: 1em; /* Espacio para la barra */
+}
+
+.fever-bar-container {
+    width: 100%;
+    height: 8px;
+    background-color: #e9e9e9;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.fever-bar-inner {
+    width: 0%; /* Empieza vacía */
+    height: 100%;
+    background: linear-gradient(90deg, #FFEDA0 0%, #FF8C00 70%, #C90022 100%);
+    border-radius: 4px;
+}
+
+#hot-days-grid-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 5px;
+    margin: 0 auto;
+    width: 100%;
+    /* Para mantener el aspect ratio de la cuadrícula */
+    aspect-ratio: 12 / 8;
+}
+
+.day-cell {
+    width: 100%;
+    padding-bottom: 100%; /* Truco para mantener el aspect ratio 1:1 */
+    position: relative;
+    background-color: #e9e9e9;
+    border-radius: 3px;
+}
+
+.day-cell .emoji {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2em; /* Ajustar según el tamaño de la celda */
+    line-height: 1;
+    /* La animación ahora la gestiona GSAP */
+}
+
+.day-cell.is-hot .emoji {
+    opacity: 1;
+}
+
+/* Colores de fondo para cada mes */
+.day-cell.month-6 { background-color: #FFFACD; } /* Junio */
+.day-cell.month-7 { background-color: #FFE4B5; } /* Julio */
+.day-cell.month-8 { background-color: #FFDDE1; } /* Agosto */
+.day-cell.month-9 { background-color: #F5DEB3; } /* Septiembre */
+
+.date-label {
+    position: absolute;
+    bottom: 2px;
+    right: 3px;
+    font-size: 0.5em;
+    color: #aaa;
+    opacity: 0.6;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.day-cell:hover .date-label {
+    opacity: 1;
+    color: #333;
+    font-size: 0.7em;
+}
+
+.month-label {
+    position: absolute;
+    top: 2px; /* Corregido */
+    left: 3px; /* Corregido */
+    font-size: 0.6em;
+    font-weight: bold;
+    color: #aaa;
+}
+
+#hot-days-scroll-spacer {
+    height: 2500vh; /* Ajustar para controlar la velocidad del scroll */
+}
+
+#longer-summer-visualization-container {
+    position: relative;
+}
+
+#longer-summer-sticky-container {
+    position: sticky;
+    top: 5em;
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+    z-index: 1;
+    padding: 2em 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#longer-summer-decade-averages-container {
+    margin-bottom: 1em;
+}
+
+.longer-summer-decade-average-bar {
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+#longer-summer-scroll-spacer {
+    height: 2000vh;
+}
+
+#longer-summer-year-info {
+    text-align: center;
+    margin: 2em 0;
+    padding: 2em 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#longer-summer-year-info .longer-summer-year {
+    font-size: 1.8em;
+    font-weight: 300;
+    padding-top: .5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+#longer-summer-year-info .longer-summer-details {
+    font-size: 1em;
+    display: block;
+}
+
+#longer-summer-year-info .longer-summer-details .longer-summer-detail-days {
+    font-weight: bold;
+}
+
+.longer-summer-day-track {
+    display: flex;
+    width: 100%;
+    height: 30px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.longer-summer-month-labels-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.longer-summer-month-label {
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: bold;
+}
+
+.longer-summer-day-marker {
+    flex-grow: 1;
+    height: 100%;
+    position: relative;
+}
+
+.longer-summer-day-marker.longer-summer-month-tick::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/**
+ * summerevolution.css
+ * Estilos para la visualización de la evolución de temperaturas de verano.
+ */
+
+:root {
+    --color-text: #333;
+    --color-text-light: #777;
+    --color-grid: #e0e0e0;
+    --color-mean-line: #007acc;
+    --color-bg-cold: rgba(0, 206, 182, 0.1);
+    --color-bg-warm: rgba(252, 195, 79, 0.15);
+    --color-bg-hot: rgba(201, 0, 34, 0.1);
+    --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/*
+ * Modelo de caja robusto y prevención de desbordamiento.
+ * Esto asegura que el componente se comporte de manera predecible
+ * cuando se incrusta en otras páginas.
+ */
+#summerevolution-container,
+#summerevolution-container * {
+    box-sizing: border-box;
+}
+
+#summerevolution-container {
+    position: relative;
+    width: 100%;
+    transition: background-color 0.5s ease-in-out;
+    font-family: var(--font-main);
+    color: var(--color-text);
+}
+
+#summerevolution-sticky-wrapper {
+    position: sticky;
+    top: 2rem;
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+#summerevolution-chart {
+    width: 100%;
+}
+
+#summerevolution-scroll-spacer {
+    height: 3000vh; /* Controla la velocidad del scrollytelling */
+    position: relative;
+    z-index: 0;
+}
+
+/* --- Estilos del Gráfico SVG --- */
+.axis path,
+.axis line {
+    fill: none;
+    stroke: var(--color-grid);
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-size: 0.8em;
+    fill: var(--color-text-light);
+}
+
+.line {
+    fill: none;
+    stroke-width: 1.5px;
+    transition: opacity 0.3s, stroke-width 0.3s;
+}
+
+.line-inactive {
+    opacity: 0.1;
+}
+
+.line-active {
+    stroke-width: 3px;
+    opacity: 1;
+}
+
+.mean-line {
+    stroke: var(--color-mean-line);
+    stroke-width: 2px;
+    stroke-dasharray: 4 2;
+}
+
+/* --- Tooltip / Anotaciones --- */
+#summerevolution-tooltip {
+    width: 90%;
+    max-width: 400px;
+    /* box-sizing: border-box; ya está aplicado globalmente */
+}
+
+.tooltip {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 0.9em;
+    pointer-events: none; /* Para que no interfiera con el hover de las líneas */
+    opacity: 0;
+    transition: opacity 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.tooltip .year {
+    font-weight: bold;
+    font-size: 1.2em;
+    display: block;
+}
+
+.tooltip .temp {
+    font-size: 1em;
+    color: var(--color-text-light);
+}
+
+@media (max-width: 768px) {
+    #summerevolution-tooltip {
+        font-size: 0.8em;
+    }
+}

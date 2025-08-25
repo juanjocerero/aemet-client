@@ -107,6 +107,7 @@
     const x = d3.scaleLinear().domain([0, 93]).range([0, width]);
     const y = d3.scaleLinear().domain([data.bounds.min, data.bounds.max]).range([height, 0]);
     const tempColor = d3.scaleSequential(d3.interpolateOranges).domain([data.bounds.min, data.bounds.max]);
+    const opacityScale = d3.scaleLinear().domain([data.bounds.min, data.bounds.max]).range([0.1, 0.5]);
     
     // Ejes
     const yAxis = d3.axisLeft(y).ticks(5).tickFormat(d => `${d.toString().replace('.', ',')}°C`);
@@ -391,7 +392,7 @@
         const container = d3.select('#summerevolution-container');
         const bgColor = d3.color(tempColor(yearData.meanTmax));
         if (bgColor) {
-            bgColor.opacity = 0.2;
+            bgColor.opacity = opacityScale(yearData.meanTmax);
             container.style('background-color', bgColor.toString());
         } else {
             container.style('background-color', 'transparent');

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizaciones Climáticas Consolidadas</title>
+    <link rel="stylesheet" href="temperaturas-verano.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .visualization-section {
+            padding: 4rem 1rem;
+            border-bottom: 2px solid #ccc;
+            background-color: #fff;
+        }
+        .visualization-section:last-child {
+            border-bottom: none;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <section id="summerevolution" class="visualization-section">
+        <h2 class="section-title">Evolución de las Temperaturas de Verano</h2>
+        <div id="summerevolution-container">
+            <div id="summerevolution-sticky-wrapper">
+                <div id="summerevolution-chart"></div>
+                <div id="summerevolution-tooltip" class="tooltip"></div>
+            </div>
+            <div id="summerevolution-scroll-spacer"></div>
+        </div>
+    </section>
+
+    <section id="longersummer" class="visualization-section">
+        <h2 class="section-title">Evolución del Verano Meteorológico</h2>
+        <div id="longer-summer-visualization-container">
+            <div id="longer-summer-sticky-container">
+                <div id="longer-summer-decade-averages-container"></div>
+                <div id="longer-summer-year-info"></div>
+                <div style="position: relative;">
+                    <div id="longer-summer-day-track" class="longer-summer-day-track"></div>
+                    <div id="longer-summer-month-labels-container" class="longer-summer-month-labels-container"></div>
+                </div>
+            </div>
+            <div id="longer-summer-scroll-spacer"></div>
+        </div>
+    </section>
+
+    <section id="hotdays" class="visualization-section">
+        <h2 class="section-title">Días de Verano por Encima de la Media Histórica</h2>
+        <div id="hot-days-visualization-container">
+            <div id="hot-days-sticky-container">
+                <div id="hot-days-year-info"></div>
+                <div id="hot-days-grid-container"></div>
+            </div>
+            <div id="hot-days-scroll-spacer"></div>
+        </div>
+    </section>
+
+    <section id="climatestripes" class="visualization-section">
+        <h2 class="section-title">Prevalencia de Días de Calor Extremo (1972-2025)</h2>
+        <div id="climate-stripes-container">
+            <div id="climate-stripes-visualization"></div>
+            <div id="climate-stripes-tooltip"></div>
+        </div>
+        <div id="climate-stripes-scroll-spacer"></div>
+    </section>
+
+    <script src="temperaturas-verano.js"></script>
+</body>
+</html>
