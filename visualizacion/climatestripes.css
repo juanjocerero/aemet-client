@@ -4,12 +4,11 @@
     max-width: 900px;
     margin: 0 auto;
     padding: 1rem;
-    background-color: #ffffff;
 }
 
 #climate-stripes-visualization {
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 5rem;
     /* Contenedor anclado que actúa como viewport */
     height: calc(100vh - 4rem); /* Altura de la ventana visible */
     overflow: hidden;

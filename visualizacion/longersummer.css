@@ -86,7 +86,7 @@
     position: relative;
 }
 
-.longer-summer-day-marker.month-tick::after {
+.longer-summer-day-marker.longer-summer-month-tick::after {
     content: '';
     position: absolute;
     top: 0;

@@ -82,7 +82,9 @@
       console.log('✅ JSON cargado', data);
     } catch (err) {
       console.error('❌ Ni remoto ni fallback disponible', err);
-      yearInfoContent.textContent = 'No se pudieron cargar los datos.';
+      // No se puede usar yearInfoContent si no está definido en este scope
+      // Considera mostrar el error en otro elemento o simplemente en la consola.
+      container.innerHTML = '<p style="color: red; text-align: center;">No se pudieron cargar los datos.</p>';
       return;
     }
 
@@ -100,9 +102,10 @@
     const allYearBars = [];
 
     // --- 5. Pre-renderizado de todas las barras ---
-    yearsData.forEach(yearData => {
+    yearsData.forEach((yearData, index) => {
         const bar = document.createElement('div');
         bar.className = 'year-stripe-bar';
+        bar.dataset.index = index; // Asociar el índice para la delegación de eventos
 
         const yearLabel = document.createElement('div');
         yearLabel.className = 'year-label';
@@ -114,7 +117,7 @@
         const isLeap = yearData.days.length === 366;
         const totalDaysInYear = isLeap ? 366 : 365;
 
-        yearData.days.forEach((day, index) => {
+        yearData.days.forEach((day) => {
             const tick = document.createElement('div');
             tick.className = 'day-tick';
             tick.style.backgroundColor = getColorForTemp(day.tmax);
@@ -123,94 +126,93 @@
             if (dayDate.getUTCDate() === 1) {
                 tick.classList.add('month-separator-tick');
             }
-
             ticksContainer.appendChild(tick);
         });
 
-        // Añadir etiquetas de meses
         const monthLabelsContainer = document.createElement('div');
         monthLabelsContainer.className = 'month-labels-container';
-        MONTHS.forEach((month, index) => {
-            const monthDays = (index === 1 && isLeap) ? 29 : month.days;
+        MONTHS.forEach((month, monthIndex) => {
+            const monthDays = (monthIndex === 1 && isLeap) ? 29 : month.days;
             const label = document.createElement('div');
             label.className = 'month-label-item';
-            label.textContent = index === 0 ? '' : month.name;
+            label.textContent = monthIndex === 0 ? '' : month.name;
             label.style.width = `${(monthDays / totalDaysInYear) * 100}%`;
             monthLabelsContainer.appendChild(label);
         });
 
-        // Añadir capa de patrón para días > 40ºC
         const patternOverlay = document.createElement('div');
         patternOverlay.className = 'pattern-overlay';
-
         const maskStops = yearData.days.map((day, i) => {
             const pos = (i / totalDaysInYear) * 100;
             const nextPos = ((i + 1) / totalDaysInYear) * 100;
             const color = day.tmax >= 40 ? 'black' : 'transparent';
             return `${color} ${pos}%, ${color} ${nextPos}%`;
         });
-
         patternOverlay.style.maskImage = `linear-gradient(to right, ${maskStops.join(', ')})`;
         patternOverlay.style.WebkitMaskImage = `linear-gradient(to right, ${maskStops.join(', ')})`;
 
-        // Añadir capa para olas de calor
         const heatwaveOverlay = document.createElement('div');
-        heatwaveOverlay.style.position = 'absolute';
-        heatwaveOverlay.style.top = '0';
-        heatwaveOverlay.style.left = '0';
-        heatwaveOverlay.style.width = '100%';
-        heatwaveOverlay.style.height = '100%';
-        heatwaveOverlay.style.pointerEvents = 'none';
-        heatwaveOverlay.style.backgroundColor = '#c90022';
-        heatwaveOverlay.style.opacity = '0.7';
-        heatwaveOverlay.style.mixBlendMode = 'multiply';
-
+        heatwaveOverlay.style.cssText = `
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; background-color: #c90022; opacity: 0.7;
+            mix-blend-mode: multiply;
+        `;
         const heatwaveMaskStops = yearData.days.map((day, i) => {
             const pos = (i / totalDaysInYear) * 100;
             const nextPos = ((i + 1) / totalDaysInYear) * 100;
             const color = day.isHeatwaveDay ? 'black' : 'transparent';
             return `${color} ${pos}%, ${color} ${nextPos}%`;
         });
-
         heatwaveOverlay.style.maskImage = `linear-gradient(to right, ${heatwaveMaskStops.join(', ')})`;
         heatwaveOverlay.style.WebkitMaskImage = `linear-gradient(to right, ${heatwaveMaskStops.join(', ')})`;
 
         bar.appendChild(yearLabel);
         bar.appendChild(ticksContainer);
         bar.appendChild(monthLabelsContainer);
-        bar.appendChild(patternOverlay); // Añadir la capa del patrón
-        bar.appendChild(heatwaveOverlay); // Añadir la capa de olas de calor
+        bar.appendChild(patternOverlay);
+        bar.appendChild(heatwaveOverlay);
         track.appendChild(bar);
         allYearBars.push(bar);
 
         gsap.set(bar, { autoAlpha: 0 });
+    });
 
-        bar.addEventListener('mousemove', (e) => {
-            tooltip.style.display = 'block';
-            const tooltipWidth = tooltip.offsetWidth;
-            const tooltipHeight = tooltip.offsetHeight;
-            const margin = 15;
-            let newLeft = e.clientX + margin;
-            let newTop = e.clientY - margin - tooltipHeight;
-            if (newLeft + tooltipWidth > window.innerWidth) newLeft = e.clientX - margin - tooltipWidth;
-            if (newTop < 0) newTop = e.clientY + margin;
-            tooltip.style.left = `${newLeft}px`;
-            tooltip.style.top = `${newTop}px`;
-            
-            let tooltipHTML = `<div class="tooltip-year">${yearData.year}</div>`;
-            tooltipHTML += `Olas de calor: <strong>${yearData.heatwaveCount}</strong><br>`;
-            if (yearData.heatwaveCount > 0) {
-                tooltipHTML += ` - Duración total: <strong>${yearData.heatwaveTotalDays} días</strong><br>`;
-                tooltipHTML += ` - Intensidad media: <strong>${yearData.heatwaveAvgIntensity}°C</strong><br>`;
-            }
-            tooltipHTML += `Días por encima de 40°C: <strong>${yearData.daysOver40}</strong>`;
-            if (yearData.annotation) tooltipHTML += `<div class="tooltip-annotation">${yearData.annotation}</div>`;
-            tooltip.innerHTML = tooltipHTML;
-        });
-
-        bar.addEventListener('mouseleave', () => {
+    // --- 5.1. Delegación de eventos para Tooltip (Mejora de rendimiento) ---
+    track.addEventListener('mousemove', (e) => {
+        const bar = e.target.closest('.year-stripe-bar');
+        if (!bar) {
             tooltip.style.display = 'none';
-        });
+            return;
+        }
+
+        const yearIndex = parseInt(bar.dataset.index, 10);
+        const yearData = yearsData[yearIndex];
+        if (!yearData) return;
+
+        tooltip.style.display = 'block';
+        const tooltipWidth = tooltip.offsetWidth;
+        const tooltipHeight = tooltip.offsetHeight;
+        const margin = 15;
+        let newLeft = e.clientX + margin;
+        let newTop = e.clientY - margin - tooltipHeight;
+        if (newLeft + tooltipWidth > window.innerWidth) newLeft = e.clientX - margin - tooltipWidth;
+        if (newTop < 0) newTop = e.clientY + margin;
+        tooltip.style.left = `${newLeft}px`;
+        tooltip.style.top = `${newTop}px`;
+        
+        let tooltipHTML = `<div class="tooltip-year">${yearData.year}</div>`;
+        tooltipHTML += `Olas de calor: <strong>${yearData.heatwaveCount}</strong><br>`;
+        if (yearData.heatwaveCount > 0) {
+            tooltipHTML += ` - Duración total: <strong>${yearData.heatwaveTotalDays} días</strong><br>`;
+            tooltipHTML += ` - Intensidad media: <strong>${yearData.heatwaveAvgIntensity}°C</strong><br>`;
+        }
+        tooltipHTML += `Días por encima de 40°C: <strong>${yearData.daysOver40}</strong>`;
+        if (yearData.annotation) tooltipHTML += `<div class="tooltip-annotation">${yearData.annotation}</div>`;
+        tooltip.innerHTML = tooltipHTML;
+    });
+
+    track.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
     });
 
     // --- 6. Scrollytelling con GSAP ---
@@ -236,10 +238,8 @@
         }
     });
 
-    // Forzar la visibilidad de la primera barra al cargar
-    if (allYearBars.length > 0) {
-        gsap.to(allYearBars[0], { autoAlpha: 1, duration: 0.3 });
-    }
+    // Se elimina la visibilidad forzada de la primera barra para evitar conflictos.
+    // ScrollTrigger se encargará de mostrarla cuando el scroll esté en la posición inicial.
   }
 
   onDOMReady(initClimateStripes);
