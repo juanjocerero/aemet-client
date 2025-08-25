@@ -231,17 +231,24 @@
             d3.select('#summerevolution-container').style('background-color', bgColor ? (bgColor.opacity = opacityScale(yearData.meanTmax), bgColor.toString()) : 'transparent');
         }
 
+        const visContainer = document.getElementById('summerevolution-container');
         ScrollTrigger.create({
-            trigger: '#summerevolution-scroll-spacer',
+            trigger: visContainer,
+            pin: '#summerevolution-sticky-wrapper',
             start: 'top top',
-            end: 'bottom bottom',
+            end: `+=${data.yearlyData.length * 80}`, // 80px of scroll per year
             scrub: 1.5,
             onUpdate: self => {
-                const yearIndex = Math.floor(self.progress * data.yearlyData.length);
-                if (yearIndex < data.yearlyData.length) updateVisuals(yearIndex);
+                const yearIndex = Math.min(data.yearlyData.length - 1, Math.floor(self.progress * data.yearlyData.length));
+                updateVisuals(yearIndex);
             },
-            onLeave: () => { tooltip.style('opacity', 0); yearMarkersGroup.selectAll('*').remove(); },
-            onEnterBack: () => tooltip.style('opacity', 1),
+            onLeave: () => {
+                tooltip.style('opacity', 0);
+                yearMarkersGroup.selectAll('*').remove();
+            },
+            onEnterBack: () => {
+                tooltip.style('opacity', 1);
+            },
         });
         tooltip.style('opacity', 0);
     }
